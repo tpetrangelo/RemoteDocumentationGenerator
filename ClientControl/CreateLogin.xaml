@@ -1,0 +1,21 @@
+﻿<Window x:Class="RemoteDocumentationGenerator.CreateLogin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RemoteDocumentationGenerator"
+        mc:Ignorable="d"
+        Title="Create User" Height="200" Width="400"
+        Closing="OnWindowclose">
+    <Grid>
+        <Label Content="Username" HorizontalAlignment="Left" Height="26" Margin="30,18,0,0" VerticalAlignment="Top" Width="65"/>
+        <Label Content="Password" HorizontalAlignment="Left" Height="26" Margin="30,70,0,0" VerticalAlignment="Top" Width="65"/>
+        <TextBox Name ="username" HorizontalAlignment="Left" Height="26" Margin="95,18,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="223"/>
+        <TextBox Name ="userPassword" HorizontalAlignment="Left" Height="26" Margin="95,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="223"/>
+        <Button Content="Create" HorizontalAlignment="Left" Height="27" Margin="134,122,0,0" VerticalAlignment="Top" Width="72" Click="CreateUser_Click"/>
+        <Button Content="Clear" HorizontalAlignment="Left" Height="27" Margin="211,122,0,0" VerticalAlignment="Top" Width="72" Click="ClearLogin_Click"/>
+    </Grid>
+</Window>
+
+    
+    

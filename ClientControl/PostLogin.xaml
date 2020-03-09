@@ -1,0 +1,78 @@
+﻿<Window x:Class="RemoteDocumentationGenerator.PostLogin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RemoteDocumentationGenerator"
+        mc:Ignorable="d"
+        Title="Main Directory" Height="500" Width="450"
+        Closing="OnWindowclose">
+    <Grid>
+        <TabControl>
+            <TabItem Width="80" Height="30" Header="New Project">
+                <Grid Margin="0,26,0,246">
+                    <Label Content="Please Enter Project Name" HorizontalAlignment="Center" VerticalAlignment="Top" Width="148" Margin="148,0,140,0"/>
+                    <TextBox Margin="148,43,140,82" MaxLength="30" />
+                    <Button Content="Create Project" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Click="CreateProject_Click" Margin="177,96,0,0"/>
+                </Grid>
+            </TabItem>
+            <TabItem Width="80" Height="30" Header="Upload File">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="238*"/>
+                        <ColumnDefinition Width="199*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a file to upload" FontSize="20" Grid.ColumnSpan="2"/>
+                    <TextBox Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2" Margin="118,13"/>
+                    <Button Grid.Row="1" HorizontalAlignment="Right" Width="50" Height="25" RenderTransformOrigin="-0.96,1.12" Margin="0,13,63,13" Click="BrowseFiles_Click" Grid.Column="1">Browse</Button>
+                    <Label Grid.Row="2" HorizontalContentAlignment="Center" Content="Please pick a project to upload to" FontSize="20" Grid.ColumnSpan="2"/>
+                    <ComboBox Grid.Row="3" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2" Margin="118,13"></ComboBox>
+                    <Button Grid.Row="4" HorizontalAlignment="Center" Width="100" Height="40" Click="UploadFile_Click" Grid.ColumnSpan="2" Margin="168,6,168,5">Upload</Button>
+                </Grid>
+            </TabItem>
+            <TabItem Width="60" Height="30" Header="Edit File">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="400"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a file to Edit" FontSize="20"/>
+                    <TreeView Grid.Row="1">
+
+                    </TreeView>
+                </Grid>
+            </TabItem>
+            <TabItem Width="90" Height="30" Header="Download File">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="400"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a file to Download" FontSize="20"/>
+                </Grid>
+            </TabItem>
+            <TabItem Width="60" Height="30" Header="View File">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="106*"/>
+                        <ColumnDefinition Width="331*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="400"/>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a file to View" FontSize="20" Grid.ColumnSpan="2"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Button Content="Logout" Height="32" HorizontalAlignment="Left" Margin="372,1,0,0" VerticalAlignment="Top" Width="70" Click="Logout_Click"/>
+    </Grid>
+</Window>
