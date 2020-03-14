@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.Xml;
 
 namespace RemoteDocumentationGenerator
 {
@@ -20,11 +21,25 @@ namespace RemoteDocumentationGenerator
     /// </summary>
     public partial class PostLogin : Window
     {
-        ServiceControl.Service server;
+        ServiceControl.Service server = new ServiceControl.Service();
+        string user;
+        List<string> userProjects = new List<string>();
+        bool comboItemExists = false;
+        public PostLogin(string userName)
+        {
+            user = userName;
+            InitializeComponent();
+            userProjects = server.PopulateProjects(userName);
+            foreach (string project in userProjects)
+            {            
+                projectOptions.Items.Add(project);
+            }
+        }
 
         public PostLogin()
         {
             InitializeComponent();
+
         }
 
         private void OnWindowclose(object sender, EventArgs e)
@@ -34,13 +49,30 @@ namespace RemoteDocumentationGenerator
 
         public void Logout_Click(object sender, RoutedEventArgs e)
         {
-            Login mainWindow = new Login();
+            Login mainWindow = new Login(user);
             this.Visibility = Visibility.Hidden;
             mainWindow.Show();
         }
 
         private void CreateProject_Click(object sender, RoutedEventArgs e)
         {
+            bool projMade = server.AddProject(projectName.Text,user);
+            if (projMade)
+            {
+                userProjects.Add(projectName.Text);
+                MessageBox.Show("Project Created!");
+            }
+            else
+            {
+                MessageBox.Show("Project Could Not Be Created!");
+            }
+            foreach (string project in userProjects)
+            {
+                if (!projectOptions.Items.Contains(project))
+                {
+                    projectOptions.Items.Add(project);
+                }
+            }
 
         }
 
@@ -53,6 +85,30 @@ namespace RemoteDocumentationGenerator
         }
 
         private void UploadFile_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void EditFiles_Click(object sender, RoutedEventArgs e)
+        {
+            EditWindow editFiles = new EditWindow();
+            this.Visibility = Visibility.Hidden;
+            editFiles.Show();
+        }
+
+        private void ViewFiles_Click(object sender, RoutedEventArgs e)
+        {
+            ViewWindow viewWindow = new ViewWindow();
+            this.Visibility = Visibility.Hidden;
+            viewWindow.Show();
+        }
+
+        private void DownloadFiles_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void PopulateProjects()
         {
 
         }

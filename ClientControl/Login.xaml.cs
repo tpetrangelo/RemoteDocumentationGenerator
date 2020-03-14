@@ -24,6 +24,13 @@ namespace RemoteDocumentationGenerator
     public partial class Login : Window
     {
         ServiceControl.Service server;
+        string user;
+        public Login(string userName)
+        {
+            InitializeComponent();
+            user = userName;
+        }
+
         public Login()
         {
             InitializeComponent();
@@ -55,7 +62,7 @@ namespace RemoteDocumentationGenerator
                     {
                         case MessageBoxResult.Yes:
                             {
-                                CreateLogin loginWindow = new CreateLogin();
+                                CreateLogin loginWindow = new CreateLogin(userName);
                                 this.Visibility = Visibility.Hidden;
                                 loginWindow.Show();
                                 break;
@@ -79,7 +86,7 @@ namespace RemoteDocumentationGenerator
                 //password is correct
                 else
                 {
-                    PostLogin primaryWindow = new PostLogin();
+                    PostLogin primaryWindow = new PostLogin(userName);
                     this.Visibility = Visibility.Hidden;
                     primaryWindow.Show();
                 }

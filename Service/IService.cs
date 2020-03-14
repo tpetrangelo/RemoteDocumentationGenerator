@@ -22,7 +22,15 @@ namespace ServiceControl
         [OperationContract]
         void AddToXML(string username, string password);
 
-        //Function for PostLogin
+        //Functions for PostLogin
+        [OperationContract]
+        bool AddProject(string projectName, string username);
+
+        [OperationContract]
+        void UploadFile();
+
+        [OperationContract]
+        List<string> PopulateProjects(string user);
 
 
     }

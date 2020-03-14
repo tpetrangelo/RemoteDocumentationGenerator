@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 using System.ServiceModel;
-
+using System.Collections.Generic;
 namespace ServiceControl
 {
     [ServiceBehavior(InstanceContextMode=InstanceContextMode.PerCall)]
@@ -52,8 +52,7 @@ namespace ServiceControl
 
         public void AddToXML(string username, string password)
         {
-            XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.Load("../../UsernamesPasswords.xml");
+            XmlDocument xmlDocument = LoadXML();
 
             XmlNode user = xmlDocument.CreateElement("User");
             XmlNode _username = xmlDocument.CreateElement("Username");
@@ -65,6 +64,61 @@ namespace ServiceControl
             xmlDocument.DocumentElement.AppendChild(user);
             xmlDocument.Save("../../UsernamesPasswords.xml");
 
+        }
+
+        public bool AddProject(string projectName, string username)
+        {
+            XmlDocument xmlDocument = LoadXML();
+
+            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Project");
+
+
+            foreach (XmlNode x in xmlNodeList)
+            {
+                if(x.InnerText == username)
+                {
+                    foreach (XmlNode proj in xmlProjectList)
+                    {
+                        if (proj.InnerText == projectName)
+                        {
+                            return false;
+                        }
+                    }
+                    XmlNode project = xmlDocument.CreateElement("Project");
+                    project.InnerText = projectName;
+                    x.ParentNode.AppendChild(project);
+                    xmlDocument.Save("../../UsernamesPasswords.xml");
+                }
+            }
+            return true;
+        }
+
+        public void UploadFile()
+        {
+
+        }
+
+        public List<string> PopulateProjects(string user)
+        {
+            XmlDocument xmlDocument = LoadXML();
+            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Project");
+            List<string> userProjects = new List<string>();
+            
+            foreach (XmlNode x in xmlNodeList)
+            {
+                if (x.InnerText == user)
+                {
+                    foreach(XmlNode proj in xmlProjectList)
+                    {
+                        userProjects.Add(proj.InnerText);
+                    }
+                    return userProjects;
+                }
+            }
+            userProjects.Add("-");
+            return userProjects;
         }
 
 

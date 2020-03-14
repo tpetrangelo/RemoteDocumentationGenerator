@@ -21,6 +21,12 @@ namespace RemoteDocumentationGenerator
     public partial class CreateLogin : Window
     {
         ServiceControl.Service server;
+        string user;
+        public CreateLogin(string userName)
+        {
+            InitializeComponent();
+            user = userName;
+        }
 
         public CreateLogin()
         {
@@ -39,7 +45,7 @@ namespace RemoteDocumentationGenerator
             string password = userPassword.Text;
             server.AddToXML(userName, password);
             MessageBox.Show("Username Created!");
-            Login mainWindow = new Login();
+            Login mainWindow = new Login(user);
             this.Visibility = Visibility.Hidden;
             mainWindow.Show();
         }
