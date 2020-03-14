@@ -11,7 +11,7 @@
         <Label Content="Username" HorizontalAlignment="Left" Height="26" Margin="30,18,0,0" VerticalAlignment="Top" Width="65"/>
         <Label Content="Password" HorizontalAlignment="Left" Height="26" Margin="30,70,0,0" VerticalAlignment="Top" Width="65"/>
         <TextBox Name ="username" HorizontalAlignment="Left" Height="26" Margin="95,18,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="223"/>
-        <TextBox Name ="userPassword" HorizontalAlignment="Left" Height="26" Margin="95,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="223"/>
+        <PasswordBox Name ="userPassword" HorizontalAlignment="Left" Height="26" Margin="95,70,0,0" VerticalAlignment="Top" Width="223"/>
         <Button Content="Login" HorizontalAlignment="Left" Height="27" Margin="134,122,0,0" VerticalAlignment="Top" Width="72" Click="Login_Click"/>
         <Button Content="Clear" HorizontalAlignment="Left" Height="27" Margin="211,122,0,0" VerticalAlignment="Top" Width="72" Click="ClearLogin_Click"/>
     </Grid>

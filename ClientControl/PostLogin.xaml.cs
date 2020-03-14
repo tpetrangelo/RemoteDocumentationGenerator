@@ -20,6 +20,8 @@ namespace RemoteDocumentationGenerator
     /// </summary>
     public partial class PostLogin : Window
     {
+        ServiceControl.Service server;
+
         public PostLogin()
         {
             InitializeComponent();

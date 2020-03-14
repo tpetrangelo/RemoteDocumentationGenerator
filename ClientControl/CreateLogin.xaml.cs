@@ -20,6 +20,8 @@ namespace RemoteDocumentationGenerator
     /// </summary>
     public partial class CreateLogin : Window
     {
+        ServiceControl.Service server;
+
         public CreateLogin()
         {
             InitializeComponent();
@@ -32,21 +34,10 @@ namespace RemoteDocumentationGenerator
 
         private void CreateUser_Click(object sender, RoutedEventArgs e)
         {
+            server = new ServiceControl.Service();
             string userName = username.Text;
             string password = userPassword.Text;
-
-            XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.Load("../../UsernamesPasswords.xml");
-
-            XmlNode user = xmlDocument.CreateElement("User");
-            XmlNode _username = xmlDocument.CreateElement("Username");
-            XmlNode pw = xmlDocument.CreateElement("Password");
-            _username.InnerText = userName;
-            pw.InnerText = password;
-            user.AppendChild(_username);
-            user.AppendChild(pw);
-            xmlDocument.DocumentElement.AppendChild(user);
-            xmlDocument.Save("../../UsernamesPasswords.xml");
+            server.AddToXML(userName, password);
             MessageBox.Show("Username Created!");
             Login mainWindow = new Login();
             this.Visibility = Visibility.Hidden;
