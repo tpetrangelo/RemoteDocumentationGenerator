@@ -19,8 +19,8 @@
             <TabItem Width="80" Height="30" Header="Upload File">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="238*"/>
-                        <ColumnDefinition Width="199*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
@@ -28,14 +28,16 @@
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="50"/>
+                        <RowDefinition Height="30"/>
                         <RowDefinition Height="50"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a file to upload" FontSize="20" Grid.ColumnSpan="2"/>
-                    <TextBox Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2" Margin="118,13"/>
+                    <TextBox Name="uploadFile" Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2" Margin="118,13"/>
                     <Button Grid.Row="1" HorizontalAlignment="Right" Width="50" Height="25" RenderTransformOrigin="-0.96,1.12" Margin="0,13,63,13" Click="BrowseFiles_Click" Grid.Column="1">Browse</Button>
                     <Label Grid.Row="2" HorizontalContentAlignment="Center" Content="Please pick a project to upload to" FontSize="20" Grid.ColumnSpan="2"/>
                     <ComboBox Name="projectOptions" Grid.Row="3" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2" Margin="118,13"></ComboBox>
                     <Button Grid.Row="4" HorizontalAlignment="Center" Width="100" Height="40" Click="UploadFile_Click" Grid.ColumnSpan="2" Margin="168,6,168,5">Upload</Button>
+                    <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Height="25" Click="GenerateProject_Click">Generate Project</Button>
                 </Grid>
             </TabItem>
             <TabItem Width="60" Height="30" Header="Edit File">

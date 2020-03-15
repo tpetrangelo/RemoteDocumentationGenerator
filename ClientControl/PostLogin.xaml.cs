@@ -24,7 +24,6 @@ namespace RemoteDocumentationGenerator
         ServiceControl.Service server = new ServiceControl.Service();
         string user;
         List<string> userProjects = new List<string>();
-        bool comboItemExists = false;
         public PostLogin(string userName)
         {
             user = userName;
@@ -39,7 +38,6 @@ namespace RemoteDocumentationGenerator
         public PostLogin()
         {
             InitializeComponent();
-
         }
 
         private void OnWindowclose(object sender, EventArgs e)
@@ -81,12 +79,21 @@ namespace RemoteDocumentationGenerator
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = false;
             openFileDialog.DefaultExt = "*.cs";
-            openFileDialog.ShowDialog();
+
+            Nullable<bool> result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                string file = openFileDialog.FileName;
+                uploadFile.Text = file;
+            }
+                
         }
 
         private void UploadFile_Click(object sender, RoutedEventArgs e)
         {
-
+            string destinationPath = server.GetFullDestinationPath(projectOptions.SelectedItem.ToString(),user);
+            server.UploadFile(uploadFile.Text, destinationPath);
+            MessageBox.Show("Project Uploaded!");
         }
 
         private void EditFiles_Click(object sender, RoutedEventArgs e)
@@ -108,9 +115,9 @@ namespace RemoteDocumentationGenerator
 
         }
 
-        private void PopulateProjects()
+        private void GenerateProject_Click(object sender, RoutedEventArgs e)
         {
-
+            server.DocumentationGenerator();
         }
     }
 }

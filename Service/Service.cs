@@ -1,6 +1,12 @@
 ﻿using System.Xml;
 using System.ServiceModel;
+using System.ServiceModel.Description;
 using System.Collections.Generic;
+using System;
+using System.Runtime.InteropServices;
+using CodeAnalysis;
+
+
 namespace ServiceControl
 {
     [ServiceBehavior(InstanceContextMode=InstanceContextMode.PerCall)]
@@ -8,7 +14,6 @@ namespace ServiceControl
     {
         public Service()
         {
-
         }
 
         public bool FindUsername(string username)
@@ -57,12 +62,16 @@ namespace ServiceControl
             XmlNode user = xmlDocument.CreateElement("User");
             XmlNode _username = xmlDocument.CreateElement("Username");
             XmlNode pw = xmlDocument.CreateElement("Password");
+            XmlNode root = xmlDocument.CreateElement("Root");
             _username.InnerText = username;
             pw.InnerText = password;
+            root.InnerText = username;
             user.AppendChild(_username);
             user.AppendChild(pw);
+            user.AppendChild(root);
             xmlDocument.DocumentElement.AppendChild(user);
             xmlDocument.Save("../../UsernamesPasswords.xml");
+            System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username);
 
         }
 
@@ -70,13 +79,13 @@ namespace ServiceControl
         {
             XmlDocument xmlDocument = LoadXML();
 
-            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
-            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Project");
+            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Root");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
 
 
-            foreach (XmlNode x in xmlNodeList)
+            foreach (XmlNode rootUser in xmlNodeList)
             {
-                if(x.InnerText == username)
+                if(rootUser.InnerText == username)
                 {
                     foreach (XmlNode proj in xmlProjectList)
                     {
@@ -87,23 +96,26 @@ namespace ServiceControl
                     }
                     XmlNode project = xmlDocument.CreateElement("Project");
                     project.InnerText = projectName;
-                    x.ParentNode.AppendChild(project);
+                    rootUser.AppendChild(project);
                     xmlDocument.Save("../../UsernamesPasswords.xml");
+                    System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/" + projectName);
+                    System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/" + projectName + "/html");
+                    System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/" + projectName + "/source");
                 }
             }
             return true;
         }
 
-        public void UploadFile()
+        public void UploadFile(string filePath, string projectPath)
         {
-
+            System.IO.File.Copy(filePath, projectPath, true);
         }
 
         public List<string> PopulateProjects(string user)
         {
             XmlDocument xmlDocument = LoadXML();
             XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
-            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Project");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
             List<string> userProjects = new List<string>();
             
             foreach (XmlNode x in xmlNodeList)
@@ -121,6 +133,26 @@ namespace ServiceControl
             return userProjects;
         }
 
+        public static ServiceHost CreateChannel(string url)
+        {
+            BasicHttpBinding binding = new BasicHttpBinding();
+            Uri address = new Uri(url);
+            Type service = typeof(Service);
+            ServiceHost host = new ServiceHost(service, address);
+            host.AddServiceEndpoint(typeof(IService), binding, address);
+            return host;
+        }
 
+        public string GetFullDestinationPath(string project, string user)
+        {
+            return "../../../Service/Repos/" + user + "/" + project + "/source";
+        }
+
+        
+        public void DocumentationGenerator()
+        {
+            FileInitiator fileInitiator = new FileInitiator();
+            
+        }
     }
 }

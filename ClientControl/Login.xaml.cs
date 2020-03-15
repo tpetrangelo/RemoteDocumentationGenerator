@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
+using ServiceControl;
+ 
 
 
 namespace RemoteDocumentationGenerator
@@ -29,11 +32,14 @@ namespace RemoteDocumentationGenerator
         {
             InitializeComponent();
             user = userName;
+            
         }
 
         public Login()
         {
             InitializeComponent();
+            ServiceHost service = Service.CreateChannel("http://localhost:8000/Service");
+            service.Open();
         }
 
         private void OnWindowclose(object sender, EventArgs e)

@@ -27,11 +27,16 @@ namespace ServiceControl
         bool AddProject(string projectName, string username);
 
         [OperationContract]
-        void UploadFile();
+        void UploadFile(string uploadFile, string project);
 
         [OperationContract]
         List<string> PopulateProjects(string user);
 
+        [OperationContract]
+        string GetFullDestinationPath(string project, string user);
+
+        [OperationContract]
+        void DocumentationGenerator();
 
     }
 }
