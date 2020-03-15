@@ -27,7 +27,7 @@ namespace ServiceControl
         bool AddProject(string projectName, string username);
 
         [OperationContract]
-        void UploadFile(string uploadFile, string project);
+        bool UploadFile(string uploadFile, string project, string username);
 
         [OperationContract]
         List<string> PopulateProjects(string user);
@@ -36,7 +36,10 @@ namespace ServiceControl
         string GetFullDestinationPath(string project, string user);
 
         [OperationContract]
-        void DocumentationGenerator();
+        void DocumentationGenerator(string project);
+
+        [OperationContract]
+        bool EditFile(string project, string user, string file);
 
     }
 }

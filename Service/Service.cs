@@ -4,7 +4,8 @@ using System.ServiceModel.Description;
 using System.Collections.Generic;
 using System;
 using System.Runtime.InteropServices;
-using CodeAnalysis;
+using System.IO;
+//using CodeAnalysis;
 
 
 namespace ServiceControl
@@ -63,9 +64,11 @@ namespace ServiceControl
             XmlNode _username = xmlDocument.CreateElement("Username");
             XmlNode pw = xmlDocument.CreateElement("Password");
             XmlNode root = xmlDocument.CreateElement("Root");
+            XmlAttribute rootId = xmlDocument.CreateAttribute("id");
             _username.InnerText = username;
             pw.InnerText = password;
-            root.InnerText = username;
+            rootId.Value = username;
+            root.Attributes.SetNamedItem(rootId);
             user.AppendChild(_username);
             user.AppendChild(pw);
             user.AppendChild(root);
@@ -85,7 +88,7 @@ namespace ServiceControl
 
             foreach (XmlNode rootUser in xmlNodeList)
             {
-                if(rootUser.InnerText == username)
+                if(rootUser.Attributes["id"].Value.ToString() == username)
                 {
                     foreach (XmlNode proj in xmlProjectList)
                     {
@@ -106,9 +109,39 @@ namespace ServiceControl
             return true;
         }
 
-        public void UploadFile(string filePath, string projectPath)
+        public bool UploadFile(string filePath, string projectPath, string username)
         {
-            System.IO.File.Copy(filePath, projectPath, true);
+            string fileName = Path.GetFileName(filePath);
+            System.IO.File.Copy(filePath, projectPath + "/" + fileName, true);
+            XmlDocument xmlDocument = LoadXML();
+            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Root");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
+            XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
+            foreach (XmlNode rootUser in xmlNodeList)
+            {
+                if (rootUser.InnerText == username)
+                {
+                    foreach (XmlNode proj in xmlProjectList)
+                    {
+                        foreach (XmlNode fileN in xmlFileList)
+                        {
+                            if (fileN.InnerText == fileName)
+                            {
+                                return false;
+                            }
+                            XmlNode file = xmlDocument.CreateElement("File");
+                            file.InnerText = fileName;
+                            proj.AppendChild(file);
+                            xmlDocument.Save("../../UsernamesPasswords.xml");
+                        }
+                        
+                    }
+                    
+                }
+            }
+            return true;
+
+
         }
 
         public List<string> PopulateProjects(string user)
@@ -149,10 +182,41 @@ namespace ServiceControl
         }
 
         
-        public void DocumentationGenerator()
+        public void DocumentationGenerator(string project)
         {
-            FileInitiator fileInitiator = new FileInitiator();
-            
+        }
+
+        public bool EditFile(string project,string user, string file)
+        {
+            return true;
+        }
+
+        public List<string> populateEditFiles(string user)
+        {
+            XmlDocument xmlDocument = LoadXML();
+            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
+            XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
+            List<string> editFiles = new List<string>();
+
+            foreach (XmlNode x in xmlNodeList)
+            {
+                if (x.InnerText == user)
+                {
+                    foreach (XmlNode proj in xmlProjectList)
+                    {
+                        foreach(XmlNode file in xmlFileList)
+                        {
+                            editFiles.Add(file.InnerText);
+                        }
+                    }
+                }
+            }
+            if(editFiles.Count == 0)
+                editFiles.Add("-");
+
+            return editFiles;
+
         }
     }
 }

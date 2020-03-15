@@ -24,14 +24,21 @@ namespace RemoteDocumentationGenerator
         ServiceControl.Service server = new ServiceControl.Service();
         string user;
         List<string> userProjects = new List<string>();
+        List<string> editFiles = new List<string>();
         public PostLogin(string userName)
         {
             user = userName;
             InitializeComponent();
             userProjects = server.PopulateProjects(userName);
+            editFiles = server.populateEditFiles(userName);
             foreach (string project in userProjects)
             {            
                 projectOptions.Items.Add(project);
+                projectGenerate.Items.Add(project);
+            }
+            foreach(string file in editFiles)
+            {
+                editFilesCB.Items.Add(file);
             }
         }
 
@@ -69,9 +76,9 @@ namespace RemoteDocumentationGenerator
                 if (!projectOptions.Items.Contains(project))
                 {
                     projectOptions.Items.Add(project);
+                    projectGenerate.Items.Add(project);
                 }
             }
-
         }
 
         private void BrowseFiles_Click(object sender, RoutedEventArgs e)
@@ -92,15 +99,23 @@ namespace RemoteDocumentationGenerator
         private void UploadFile_Click(object sender, RoutedEventArgs e)
         {
             string destinationPath = server.GetFullDestinationPath(projectOptions.SelectedItem.ToString(),user);
-            server.UploadFile(uploadFile.Text, destinationPath);
+            bool fileUploaded = server.UploadFile(uploadFile.Text, destinationPath, user);
             MessageBox.Show("Project Uploaded!");
         }
 
         private void EditFiles_Click(object sender, RoutedEventArgs e)
         {
-            EditWindow editFiles = new EditWindow();
-            this.Visibility = Visibility.Hidden;
-            editFiles.Show();
+            server.EditFile(projectName.Text, user,editFilesCB.SelectedIndex.ToString());
+            //foreach (string file in editFiles)
+            //{
+            //    if (!editFilesCB.Items.Contains(file))
+            //    {
+            //        editFilesCB.Items.Add(file);
+            //    }
+            //}
+            //EditWindow editFiles = new EditWindow();
+            //this.Visibility = Visibility.Hidden;
+            //editFiles.Show();
         }
 
         private void ViewFiles_Click(object sender, RoutedEventArgs e)
@@ -117,7 +132,8 @@ namespace RemoteDocumentationGenerator
 
         private void GenerateProject_Click(object sender, RoutedEventArgs e)
         {
-            server.DocumentationGenerator();
+            string projectPath = server.GetFullDestinationPath(projectGenerate.SelectedItem.ToString(), user);
+            server.DocumentationGenerator(projectPath);
         }
     }
 }
