@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ClientControl"
+        xmlns:local="clr-namespace:RemoteDocumentationGenerator"
         mc:Ignorable="d"
         Title="EditWindow" Height="450" Width="800">
     <Grid>
@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <TextBox Name="editText" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
         <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Width="100" Click="Save_Click">Save</Button>
         <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="100" Click="Cancel_Click">Cancel</Button>
     </Grid>

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ServiceModel;
 using System.Xml;
+using System.IO;
+using System.Collections.Specialized;
+
 
 namespace ServiceControl
 {
@@ -27,7 +30,7 @@ namespace ServiceControl
         bool AddProject(string projectName, string username);
 
         [OperationContract]
-        bool UploadFile(string uploadFile, string project, string username);
+        bool UploadFile(string uploadFile, string project, string username,string projectName);
 
         [OperationContract]
         List<string> PopulateProjects(string user);
@@ -39,7 +42,11 @@ namespace ServiceControl
         void DocumentationGenerator(string project);
 
         [OperationContract]
-        bool EditFile(string project, string user, string file);
+        string GetFilePath(string project, string user, string file);
+
+        //Functions for EditWindow
+        [OperationContract]
+        void SaveFile(string file, StringCollection writeBack);
 
     }
 }

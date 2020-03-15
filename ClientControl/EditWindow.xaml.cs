@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
+using System.Collections.Specialized;
 
 namespace RemoteDocumentationGenerator
 {
@@ -19,11 +21,17 @@ namespace RemoteDocumentationGenerator
     /// </summary>
     public partial class EditWindow : Window
     {
-        string user;
-        public EditWindow(string userName)
+        string file;
+        ServiceControl.Service server = new ServiceControl.Service();
+
+        public EditWindow(string fileLoc)
         {
             InitializeComponent();
-            user = userName;
+            this.Dispatcher.Invoke(() =>
+            {
+                editText.Text = System.IO.File.ReadAllText(fileLoc);
+            });
+            file = fileLoc;
         }
 
         public EditWindow()
@@ -33,12 +41,22 @@ namespace RemoteDocumentationGenerator
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-
+            StringCollection lines = new StringCollection();
+            int lineCount = editText.LineCount;
+            for(int line = 0; line < lineCount; line++)
+            {
+                lines.Add(editText.GetLineText(line));
+            }
+            
+            server.SaveFile(file, lines);
+            PostLogin postLogin = new PostLogin();
+            this.Visibility = Visibility.Hidden;
+            postLogin.Show();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            PostLogin postLogin = new PostLogin(null);
+            PostLogin postLogin = new PostLogin();
             this.Visibility = Visibility.Hidden;
             postLogin.Show();
         }

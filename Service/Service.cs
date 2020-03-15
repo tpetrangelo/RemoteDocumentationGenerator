@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Collections.Specialized;
+
 //using CodeAnalysis;
 
 
@@ -84,7 +86,8 @@ namespace ServiceControl
 
             XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Root");
             XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
-
+            XmlAttribute projectID = xmlDocument.CreateAttribute("id");
+            projectID.Value = projectName;
 
             foreach (XmlNode rootUser in xmlNodeList)
             {
@@ -98,7 +101,7 @@ namespace ServiceControl
                         }
                     }
                     XmlNode project = xmlDocument.CreateElement("Project");
-                    project.InnerText = projectName;
+                    project.Attributes.SetNamedItem(projectID);
                     rootUser.AppendChild(project);
                     xmlDocument.Save("../../UsernamesPasswords.xml");
                     System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/" + projectName);
@@ -109,7 +112,7 @@ namespace ServiceControl
             return true;
         }
 
-        public bool UploadFile(string filePath, string projectPath, string username)
+        public bool UploadFile(string filePath, string projectPath, string username, string projectName)
         {
             string fileName = Path.GetFileName(filePath);
             System.IO.File.Copy(filePath, projectPath + "/" + fileName, true);
@@ -119,29 +122,29 @@ namespace ServiceControl
             XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
             foreach (XmlNode rootUser in xmlNodeList)
             {
-                if (rootUser.InnerText == username)
+                if (rootUser.Attributes["id"].Value.ToString() == username)
                 {
                     foreach (XmlNode proj in xmlProjectList)
                     {
-                        foreach (XmlNode fileN in xmlFileList)
+                        if(proj.Attributes["id"].Value.ToString() == projectName)
                         {
-                            if (fileN.InnerText == fileName)
+                            foreach (XmlNode fileN in xmlFileList)
                             {
-                                return false;
+                                if (fileN.InnerText == fileName)
+                                {
+                                    return false;
+                                }
                             }
                             XmlNode file = xmlDocument.CreateElement("File");
                             file.InnerText = fileName;
                             proj.AppendChild(file);
                             xmlDocument.Save("../../UsernamesPasswords.xml");
                         }
-                        
                     }
                     
                 }
             }
             return true;
-
-
         }
 
         public List<string> PopulateProjects(string user)
@@ -157,7 +160,7 @@ namespace ServiceControl
                 {
                     foreach(XmlNode proj in xmlProjectList)
                     {
-                        userProjects.Add(proj.InnerText);
+                        userProjects.Add(proj.Attributes["id"].Value.ToString());
                     }
                     return userProjects;
                 }
@@ -181,14 +184,13 @@ namespace ServiceControl
             return "../../../Service/Repos/" + user + "/" + project + "/source";
         }
 
-        
         public void DocumentationGenerator(string project)
         {
         }
 
-        public bool EditFile(string project,string user, string file)
+        public string GetFilePath(string project,string user, string file)
         {
-            return true;
+            return "../../../Service/Repos/" + user + "/" + project + "/source/" + file;
         }
 
         public List<string> populateEditFiles(string user)
@@ -216,6 +218,11 @@ namespace ServiceControl
                 editFiles.Add("-");
 
             return editFiles;
+
+        }
+
+        public void SaveFile(string file, StringCollection writeBack)
+        {
 
         }
     }

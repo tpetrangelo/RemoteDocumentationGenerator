@@ -25,6 +25,7 @@ namespace RemoteDocumentationGenerator
         string user;
         List<string> userProjects = new List<string>();
         List<string> editFiles = new List<string>();
+
         public PostLogin(string userName)
         {
             user = userName;
@@ -35,8 +36,10 @@ namespace RemoteDocumentationGenerator
             {            
                 projectOptions.Items.Add(project);
                 projectGenerate.Items.Add(project);
+                projectEdit.Items.Add(project);
+
             }
-            foreach(string file in editFiles)
+            foreach (string file in editFiles)
             {
                 editFilesCB.Items.Add(file);
             }
@@ -77,6 +80,7 @@ namespace RemoteDocumentationGenerator
                 {
                     projectOptions.Items.Add(project);
                     projectGenerate.Items.Add(project);
+                    projectEdit.Items.Add(project);
                 }
             }
         }
@@ -99,23 +103,30 @@ namespace RemoteDocumentationGenerator
         private void UploadFile_Click(object sender, RoutedEventArgs e)
         {
             string destinationPath = server.GetFullDestinationPath(projectOptions.SelectedItem.ToString(),user);
-            bool fileUploaded = server.UploadFile(uploadFile.Text, destinationPath, user);
-            MessageBox.Show("Project Uploaded!");
+            bool fileUploaded = server.UploadFile(uploadFile.Text, destinationPath, user, projectOptions.SelectedItem.ToString());
+            if (fileUploaded)
+            {
+                editFiles.Add(uploadFile.Text);
+                MessageBox.Show("Project Uploaded!");
+            }
+            else
+                MessageBox.Show("Project Could Not Be Uploaded!");
+            foreach(string file in editFiles)
+            {
+                if (!editFilesCB.Items.Contains(file))
+                {
+                    editFilesCB.Items.Add(file);
+                }
+            }
         }
 
         private void EditFiles_Click(object sender, RoutedEventArgs e)
         {
-            server.EditFile(projectName.Text, user,editFilesCB.SelectedIndex.ToString());
-            //foreach (string file in editFiles)
-            //{
-            //    if (!editFilesCB.Items.Contains(file))
-            //    {
-            //        editFilesCB.Items.Add(file);
-            //    }
-            //}
-            //EditWindow editFiles = new EditWindow();
-            //this.Visibility = Visibility.Hidden;
-            //editFiles.Show();
+            string editedFile = server.GetFilePath(projectEdit.SelectedItem.ToString(), user, editFilesCB.SelectedItem.ToString());
+
+            EditWindow editFiles = new EditWindow(editedFile);
+            this.Visibility = Visibility.Hidden;
+            editFiles.Show();
         }
 
         private void ViewFiles_Click(object sender, RoutedEventArgs e)
