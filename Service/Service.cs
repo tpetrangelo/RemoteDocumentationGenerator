@@ -61,7 +61,6 @@ namespace ServiceControl
         public void AddToXML(string username, string password)
         {
             XmlDocument xmlDocument = LoadXML();
-
             XmlNode user = xmlDocument.CreateElement("User");
             XmlNode _username = xmlDocument.CreateElement("Username");
             XmlNode pw = xmlDocument.CreateElement("Password");

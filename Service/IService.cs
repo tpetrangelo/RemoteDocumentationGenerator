@@ -49,4 +49,14 @@ namespace ServiceControl
         void SaveFile(string file, StringCollection writeBack);
 
     }
+
+    [MessageContract]
+    public class FileTransferMessage
+    {
+        [MessageHeader]
+        public string fileName { get; set; }
+
+        [MessageBodyMember]
+        public Stream transferStream { get; set; }
+    }
 }
