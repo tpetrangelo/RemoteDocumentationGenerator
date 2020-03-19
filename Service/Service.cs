@@ -15,8 +15,12 @@ namespace ServiceControl
     [ServiceBehavior(InstanceContextMode=InstanceContextMode.PerCall)]
     public class Service : IService
     {
+        int BlockSize = 1024;
+        byte[] block;
+
         public Service()
         {
+          block = new byte[BlockSize];
         }
 
         public bool FindUsername(string username)
@@ -76,6 +80,7 @@ namespace ServiceControl
             xmlDocument.DocumentElement.AppendChild(user);
             xmlDocument.Save("../../UsernamesPasswords.xml");
             System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username);
+            System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/DownloadedFiles");
 
         }
 
@@ -113,8 +118,16 @@ namespace ServiceControl
 
         public bool UploadFile(string filePath, string projectPath, string username, string projectName)
         {
-            string fileName = Path.GetFileName(filePath);
-            System.IO.File.Copy(filePath, projectPath + "/" + fileName, true);
+            string file = Path.GetFileName(filePath);
+            using(var inputStream = new FileStream(filePath, FileMode.Open))
+            {
+                FileTransferMessage message = new FileTransferMessage();
+                message.fileName = file;
+                message.transferStream = inputStream;
+                message.projectPath = projectPath;
+                this.upLoadFile(message) ;
+                
+            }
             XmlDocument xmlDocument = LoadXML();
             XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Root");
             XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
@@ -129,14 +142,14 @@ namespace ServiceControl
                         {
                             foreach (XmlNode fileN in xmlFileList)
                             {
-                                if (fileN.InnerText == fileName)
+                                if (fileN.InnerText == file)
                                 {
                                     return false;
                                 }
                             }
-                            XmlNode file = xmlDocument.CreateElement("File");
-                            file.InnerText = fileName;
-                            proj.AppendChild(file);
+                            XmlNode fileX = xmlDocument.CreateElement("File");
+                            fileX.InnerText = file;
+                            proj.AppendChild(fileX);
                             xmlDocument.Save("../../UsernamesPasswords.xml");
                         }
                     }
@@ -171,8 +184,10 @@ namespace ServiceControl
         public static ServiceHost CreateChannel(string url)
         {
             BasicHttpBinding binding = new BasicHttpBinding();
+            binding.TransferMode = TransferMode.Streamed;
+            binding.MaxReceivedMessageSize = 50000000;
             Uri address = new Uri(url);
-            Type service = typeof(Service);
+            Type service = typeof(ServiceControl.Service);
             ServiceHost host = new ServiceHost(service, address);
             host.AddServiceEndpoint(typeof(IService), binding, address);
             return host;
@@ -222,6 +237,112 @@ namespace ServiceControl
 
         public void SaveFile(string file, StringCollection writeBack)
         {
+            string[] newFile = new string[writeBack.Count];
+            writeBack.CopyTo(newFile, 0);
+            System.IO.File.WriteAllLines(file, newFile);
+        }
+
+        public void upLoadFile(FileTransferMessage msg)
+        {
+            string projectPath = msg.projectPath;
+            string filename = msg.fileName;
+            string rfilename = Path.Combine(projectPath + "/", filename);
+            if (!Directory.Exists(projectPath))
+                Directory.CreateDirectory(projectPath);
+            using (var outputStream = new FileStream(rfilename, FileMode.Create))
+            {
+                while (true)
+                {
+                    int bytesRead = msg.transferStream.Read(block, 0, BlockSize);
+                    if (bytesRead > 0)
+                        outputStream.Write(block, 0, bytesRead);
+                    else
+                        break;
+                }
+            }
+        }
+
+
+
+        public List<string> PopulateFiles()
+        {
+            XmlDocument xmlDocument = LoadXML();
+            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
+            XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
+            List<string> allFiles = new List<string>();
+
+            foreach (XmlNode x in xmlNodeList)
+            {
+                foreach (XmlNode proj in xmlProjectList)
+                {
+                    foreach (XmlNode file in xmlFileList)
+                    {
+                        allFiles.Add(file.InnerText);
+                    }
+                }
+            }
+            if (allFiles.Count == 0)
+                allFiles.Add("-");
+
+            return allFiles;
+        }
+
+        public string GetProject(string fileName)
+        {
+            XmlDocument xmlDocument = LoadXML();
+            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
+            XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
+
+            foreach (XmlNode x in xmlNodeList)
+            {
+                foreach (XmlNode proj in xmlProjectList)
+                {
+                    foreach (XmlNode file in xmlFileList)
+                    {
+                        if(file.InnerText == fileName)
+                        {
+                            return file.ParentNode.Attributes["id"].Value.ToString();
+                        }
+                        
+                    }
+                }
+            }
+
+            return "-";
+        }
+
+        public string GetUser(string fileName)
+        {
+            XmlDocument xmlDocument = LoadXML();
+            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
+            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
+            XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
+
+            foreach (XmlNode x in xmlNodeList)
+            {
+                foreach (XmlNode proj in xmlProjectList)
+                {
+                    foreach (XmlNode file in xmlFileList)
+                    {
+                        if (file.InnerText == fileName)
+                        {
+                            return file.ParentNode.ParentNode.Attributes["id"].Value.ToString();
+                        }
+
+                    }
+                }
+            }
+
+            return "-";
+        }
+
+        public void DownloadFile(string fileLoc, string user)
+        {
+            string file = Path.GetFileName(fileLoc);
+            string destinationPath = "../../../Service/Repos/" + user + "/DownloadedFiles/" + file ;
+            System.IO.File.Copy(fileLoc, destinationPath, true);
 
         }
     }

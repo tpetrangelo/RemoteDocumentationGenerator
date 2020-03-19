@@ -20,10 +20,16 @@ namespace RemoteDocumentationGenerator
     public partial class ViewWindow : Window
     {
         string user;
-        public ViewWindow(string userName)
+        string file;
+        public ViewWindow(string fileLoc, string username)
         {
             InitializeComponent();
-            user = userName;
+            this.Dispatcher.Invoke(() =>
+            {
+                viewFile.Text = System.IO.File.ReadAllText(fileLoc);
+            });
+            user = username;
+            file = fileLoc;
         }
         
         public ViewWindow()
@@ -33,7 +39,7 @@ namespace RemoteDocumentationGenerator
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            PostLogin postLogin = new PostLogin(null);
+            PostLogin postLogin = new PostLogin(user);
             this.Visibility = Visibility.Hidden;
             postLogin.Show();
         }

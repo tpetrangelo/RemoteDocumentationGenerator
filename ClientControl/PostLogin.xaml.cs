@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.Xml;
+using System.ServiceModel;
+
 
 namespace RemoteDocumentationGenerator
 {
@@ -23,15 +25,19 @@ namespace RemoteDocumentationGenerator
     {
         ServiceControl.Service server = new ServiceControl.Service();
         string user;
+        static ServiceHost _serverHost;
         List<string> userProjects = new List<string>();
         List<string> editFiles = new List<string>();
+        List<string> allFiles = new List<string>();
 
-        public PostLogin(string userName)
+        public PostLogin(string userName, ServiceHost serviceHost)
         {
             user = userName;
+            _serverHost = serviceHost;
             InitializeComponent();
             userProjects = server.PopulateProjects(userName);
             editFiles = server.populateEditFiles(userName);
+            allFiles = server.PopulateFiles();
             foreach (string project in userProjects)
             {            
                 projectOptions.Items.Add(project);
@@ -43,11 +49,44 @@ namespace RemoteDocumentationGenerator
             {
                 editFilesCB.Items.Add(file);
             }
+            foreach(string allFile in allFiles)
+            {
+                if (!allFiles.Contains(allFile))
+                {
+                    FileToDownload.Items.Add(allFile);
+                    FileToView.Items.Add(allFile);
+                }
+            }
         }
 
-        public PostLogin()
+        public PostLogin(string userName)
         {
+            user = userName;
             InitializeComponent();
+            userProjects = server.PopulateProjects(userName);
+            editFiles = server.populateEditFiles(userName);
+            allFiles = server.PopulateFiles();
+
+            foreach (string project in userProjects)
+            {
+                projectOptions.Items.Add(project);
+                projectGenerate.Items.Add(project);
+                projectEdit.Items.Add(project);
+
+            }
+            foreach (string file in editFiles)
+            {
+                editFilesCB.Items.Add(file);
+            }
+            foreach (string allFile in allFiles)
+            {
+                if (!allFiles.Contains(allFile))
+                {
+                    FileToDownload.Items.Add(allFile);
+                    FileToView.Items.Add(allFile);
+                }
+                
+            }
         }
 
         private void OnWindowclose(object sender, EventArgs e)
@@ -57,7 +96,8 @@ namespace RemoteDocumentationGenerator
 
         public void Logout_Click(object sender, RoutedEventArgs e)
         {
-            Login mainWindow = new Login(user);
+            _serverHost.Close();
+            Login mainWindow = new Login();
             this.Visibility = Visibility.Hidden;
             mainWindow.Show();
         }
@@ -118,27 +158,42 @@ namespace RemoteDocumentationGenerator
                     editFilesCB.Items.Add(file);
                 }
             }
+
+            foreach(string allFile in allFiles)
+            {
+                if (!FileToView.Items.Contains(allFile))
+                {
+                    FileToView.Items.Add(allFile);
+                    FileToDownload.Items.Add(allFile);
+                }
+            }
         }
 
         private void EditFiles_Click(object sender, RoutedEventArgs e)
         {
             string editedFile = server.GetFilePath(projectEdit.SelectedItem.ToString(), user, editFilesCB.SelectedItem.ToString());
 
-            EditWindow editFiles = new EditWindow(editedFile);
+            EditWindow editFiles = new EditWindow(editedFile, user);
             this.Visibility = Visibility.Hidden;
             editFiles.Show();
         }
 
         private void ViewFiles_Click(object sender, RoutedEventArgs e)
         {
-            ViewWindow viewWindow = new ViewWindow();
+            string project = server.GetProject(FileToView.SelectedItem.ToString());
+            string fileLoc = server.GetFilePath(project, user, FileToView.SelectedItem.ToString());
+            ViewWindow viewWindow = new ViewWindow(fileLoc, user);
             this.Visibility = Visibility.Hidden;
             viewWindow.Show();
         }
 
         private void DownloadFiles_Click(object sender, RoutedEventArgs e)
         {
-
+            string project = server.GetProject(FileToDownload.SelectedItem.ToString());
+            string userProject = server.GetUser(FileToDownload.SelectedItem.ToString());
+            string fileLoc = server.GetFilePath(project, userProject, FileToDownload.SelectedItem.ToString());
+            server.DownloadFile(fileLoc, user);
+            MessageBox.Show("File Downloaded!");
         }
 
         private void GenerateProject_Click(object sender, RoutedEventArgs e)
@@ -146,5 +201,7 @@ namespace RemoteDocumentationGenerator
             string projectPath = server.GetFullDestinationPath(projectGenerate.SelectedItem.ToString(), user);
             server.DocumentationGenerator(projectPath);
         }
+
+
     }
 }

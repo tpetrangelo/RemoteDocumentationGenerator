@@ -23,14 +23,16 @@ namespace RemoteDocumentationGenerator
     {
         string file;
         ServiceControl.Service server = new ServiceControl.Service();
-
-        public EditWindow(string fileLoc)
+        string _username;
+        public EditWindow(string fileLoc, string username)
         {
+            
             InitializeComponent();
             this.Dispatcher.Invoke(() =>
             {
                 editText.Text = System.IO.File.ReadAllText(fileLoc);
             });
+            _username = username;
             file = fileLoc;
         }
 
@@ -49,14 +51,14 @@ namespace RemoteDocumentationGenerator
             }
             
             server.SaveFile(file, lines);
-            PostLogin postLogin = new PostLogin();
+            PostLogin postLogin = new PostLogin(_username);
             this.Visibility = Visibility.Hidden;
             postLogin.Show();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            PostLogin postLogin = new PostLogin();
+            PostLogin postLogin = new PostLogin(_username);
             this.Visibility = Visibility.Hidden;
             postLogin.Show();
         }

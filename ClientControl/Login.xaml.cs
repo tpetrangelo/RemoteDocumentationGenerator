@@ -28,17 +28,13 @@ namespace RemoteDocumentationGenerator
     {
         ServiceControl.Service server;
         string user;
-        public Login(string userName)
-        {
-            InitializeComponent();
-            user = userName;
-            
-        }
+        ServiceHost service;
 
         public Login()
         {
             InitializeComponent();
-            ServiceHost service = Service.CreateChannel("http://localhost:8000/Service");
+            Title = "Login";
+            service = Service.CreateChannel("http://localhost:8000/Service");
             service.Open();
         }
 
@@ -68,7 +64,7 @@ namespace RemoteDocumentationGenerator
                     {
                         case MessageBoxResult.Yes:
                             {
-                                CreateLogin loginWindow = new CreateLogin(userName);
+                                CreateLogin loginWindow = new CreateLogin(userName,service);
                                 this.Visibility = Visibility.Hidden;
                                 loginWindow.Show();
                                 break;
@@ -92,7 +88,7 @@ namespace RemoteDocumentationGenerator
                 //password is correct
                 else
                 {
-                    PostLogin primaryWindow = new PostLogin(userName);
+                    PostLogin primaryWindow = new PostLogin(userName, service);
                     this.Visibility = Visibility.Hidden;
                     primaryWindow.Show();
                 }

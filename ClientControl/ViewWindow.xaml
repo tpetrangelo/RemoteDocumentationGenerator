@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ClientControl"
+        xmlns:local="clr-namespace:RemoteDocumentationGenerator"
         mc:Ignorable="d"
         Title="ViewWindow" Height="450" Width="800">
     <Grid>
@@ -14,7 +14,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0"/>
+        <TextBlock Name="viewFile" Grid.Row="0"/>
         <Button Grid.Row="1" HorizontalAlignment="Center" Width="100" Click="Close_Click">Close</Button>
         
     </Grid>

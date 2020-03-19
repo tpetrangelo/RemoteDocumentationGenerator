@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
+using System.ServiceModel;
 
 namespace RemoteDocumentationGenerator
 {
@@ -22,10 +23,13 @@ namespace RemoteDocumentationGenerator
     {
         ServiceControl.Service server;
         string user;
-        public CreateLogin(string userName)
+        ServiceHost _service;
+        
+        public CreateLogin(string userName, ServiceHost service)
         {
             InitializeComponent();
             user = userName;
+            _service = service;
         }
 
         public CreateLogin()
@@ -45,8 +49,9 @@ namespace RemoteDocumentationGenerator
             string password = userPassword.Text;
             server.AddToXML(userName, password);
             MessageBox.Show("Username Created!");
-            Login mainWindow = new Login(user);
+            Login mainWindow = new Login();
             this.Visibility = Visibility.Hidden;
+            _service.Close();
             mainWindow.Show();
         }
 

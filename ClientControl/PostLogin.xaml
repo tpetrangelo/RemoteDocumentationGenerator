@@ -70,7 +70,7 @@
                         <RowDefinition Height="300"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a file to Download" FontSize="20"/>
-                    <ComboBox Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2"></ComboBox>
+                    <ComboBox Name="FileToDownload" Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2"></ComboBox>
                     <Button Grid.Row="2" HorizontalContentAlignment="Center" Width="100" Height="25" Click="DownloadFiles_Click" >Download</Button>
 
                 </Grid>
@@ -84,7 +84,7 @@
                         <RowDefinition Height="300"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a file to View" FontSize="20"/>
-                    <ComboBox Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2"></ComboBox>
+                    <ComboBox Name="FileToView" Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2"></ComboBox>
                     <Button Grid.Row="2" HorizontalContentAlignment="Center" Width="100" Height="25" Click="ViewFiles_Click" >View</Button>
 
                 </Grid>

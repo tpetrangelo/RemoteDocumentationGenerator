@@ -30,7 +30,7 @@ namespace ServiceControl
         bool AddProject(string projectName, string username);
 
         [OperationContract]
-        bool UploadFile(string uploadFile, string project, string username,string projectName);
+        bool UploadFile(string uploadFile, string project, string username, string projectName);
 
         [OperationContract]
         List<string> PopulateProjects(string user);
@@ -48,21 +48,7 @@ namespace ServiceControl
         [OperationContract]
         void SaveFile(string file, StringCollection writeBack);
 
-        [OperationContract]
-        void upLoadFile(FileTransferMessage msg);
-
-        [OperationContract]
-        List<string> PopulateFiles();
-
-        [OperationContract]
-        string GetProject(string fileName);
-
-        [OperationContract]
-        string GetUser(string fileName);
-
-        [OperationContract]
-        void DownloadFile(string fileLoc, string user);
-
+        
     }
 
     [MessageContract]
@@ -71,12 +57,7 @@ namespace ServiceControl
         [MessageHeader]
         public string fileName { get; set; }
 
-        [MessageHeader]
-        public string projectPath { get; set; }
-
         [MessageBodyMember]
         public Stream transferStream { get; set; }
-
-
     }
 }
