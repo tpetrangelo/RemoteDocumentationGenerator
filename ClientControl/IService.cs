@@ -25,6 +25,12 @@ namespace ServiceControl
         [OperationContract]
         void AddToXML(string username, string password);
 
+        [OperationContract]
+        void CreateRootHTML(string username);
+
+        [OperationContract]
+        void CreateProjectHTML(string project, string username);
+        
         //Functions for PostLogin
         [OperationContract]
         bool AddProject(string projectName, string username);
@@ -43,6 +49,11 @@ namespace ServiceControl
 
         [OperationContract]
         string GetFilePath(string project, string user, string file);
+
+        [OperationContract]
+        void AddProjectToRoot(string project, string user);
+
+
 
         //Functions for EditWindow
         [OperationContract]

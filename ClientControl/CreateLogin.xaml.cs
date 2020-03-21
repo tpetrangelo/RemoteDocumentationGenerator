@@ -48,10 +48,11 @@ namespace RemoteDocumentationGenerator
             string userName = username.Text;
             string password = userPassword.Text;
             server.AddToXML(userName, password);
+            server.CreateRootHTML(userName);
             MessageBox.Show("Username Created!");
+            _service.Close();
             Login mainWindow = new Login();
             this.Visibility = Visibility.Hidden;
-            _service.Close();
             mainWindow.Show();
         }
 

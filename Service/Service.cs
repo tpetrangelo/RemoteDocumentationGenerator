@@ -6,6 +6,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Collections.Specialized;
+using System.Text;
+using System.Linq;
 
 //using CodeAnalysis;
 
@@ -81,6 +83,7 @@ namespace ServiceControl
             xmlDocument.Save("../../UsernamesPasswords.xml");
             System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username);
             System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/DownloadedFiles");
+            System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/Root");
 
         }
 
@@ -165,7 +168,10 @@ namespace ServiceControl
             XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
             XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
             List<string> userProjects = new List<string>();
-            
+
+            if (userProjects.Count != 0 && userProjects[0] == "-")
+                userProjects.RemoveAt(0);
+
             foreach (XmlNode x in xmlNodeList)
             {
                 if (x.InnerText == user)
@@ -215,8 +221,12 @@ namespace ServiceControl
             XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
             List<string> editFiles = new List<string>();
 
+            if (editFiles.Count != 0 && editFiles[0].ToString() == "-")
+                editFiles.RemoveAt(0);
+
             foreach (XmlNode x in xmlNodeList)
             {
+               
                 if (x.InnerText == user)
                 {
                     foreach (XmlNode proj in xmlProjectList)
@@ -262,8 +272,6 @@ namespace ServiceControl
             }
         }
 
-
-
         public List<string> PopulateFiles()
         {
             XmlDocument xmlDocument = LoadXML();
@@ -271,6 +279,9 @@ namespace ServiceControl
             XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
             XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
             List<string> allFiles = new List<string>();
+
+            if (allFiles.Count != 0 && allFiles[0] == "-")
+                allFiles.RemoveAt(0);
 
             foreach (XmlNode x in xmlNodeList)
             {
@@ -282,9 +293,7 @@ namespace ServiceControl
                     }
                 }
             }
-            if (allFiles.Count == 0)
-                allFiles.Add("-");
-
+            
             return allFiles;
         }
 
@@ -343,7 +352,49 @@ namespace ServiceControl
             string file = Path.GetFileName(fileLoc);
             string destinationPath = "../../../Service/Repos/" + user + "/DownloadedFiles/" + file ;
             System.IO.File.Copy(fileLoc, destinationPath, true);
+        }
 
+        public void CreateRootHTML(string user)
+        {
+            string destinationPath = "../../../Service/Repos/" + user + "/Root/" + user + ".html";
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<!DOCTYPE html><html><head><title>" + user + "</title></head><body><h1 style=\"text-align:center\">" + user + "</h1>");
+            sb.Append("</body></html>");
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(destinationPath))
+            {
+                file.WriteLine(sb.ToString());
+            }
+        }
+
+        public void CreateProjectHTML(string project, string user)
+        {
+            string rootPath = "../../../" + user + "/Root/" + user + ".html";
+            string destinationPath = "../../../Service/Repos/" + user + "/" + project + "/html/" + project + ".html";
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<!DOCTYPE html><html><head><title>" + project + "</title></head><body><h1 style=\"text-align:center\">" + project + "</h1>");
+            sb.Append("<a href =\"" + rootPath + "\">" + user + "</a>");
+            sb.Append("</body></html>");
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(destinationPath))
+            {
+                file.WriteLine(sb.ToString());
+            }
+        }
+
+        public void AddProjectToRoot(string project, string user)
+        {
+            string destinationPath = "../../../Service/Repos/" + user + "/Root/" + user + ".html";
+            string projectPath = "../../../Repos/" + user + "/" + project + "/html/" + project + ".html";
+            string fileContent = File.ReadAllText(destinationPath);
+            int bodyIndex = fileContent.IndexOf("</body>");
+            string body = fileContent.Substring(0,bodyIndex);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(body);
+            sb.Append("<a href=\"" + projectPath + "\">" + project + "</a></br>");
+            sb.Append("</body></html>");
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(destinationPath))
+            {
+                file.WriteLine(sb.ToString());
+            }
         }
     }
 }

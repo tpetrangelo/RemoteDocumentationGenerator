@@ -25,6 +25,7 @@ namespace RemoteDocumentationGenerator
     {
         ServiceControl.Service server = new ServiceControl.Service();
         string user;
+        static string uploadFilePath;
         static ServiceHost _serverHost;
         List<string> userProjects = new List<string>();
         List<string> editFiles = new List<string>();
@@ -47,15 +48,15 @@ namespace RemoteDocumentationGenerator
             }
             foreach (string file in editFiles)
             {
-                editFilesCB.Items.Add(file);
+                if (!editFilesCB.Items.Contains(file))
+                {
+                    editFilesCB.Items.Add(file);
+                }
             }
             foreach(string allFile in allFiles)
             {
-                if (!allFiles.Contains(allFile))
-                {
                     FileToDownload.Items.Add(allFile);
                     FileToView.Items.Add(allFile);
-                }
             }
         }
 
@@ -76,16 +77,16 @@ namespace RemoteDocumentationGenerator
             }
             foreach (string file in editFiles)
             {
-                editFilesCB.Items.Add(file);
+                if (!editFilesCB.Items.Contains(file))
+                {
+                    editFilesCB.Items.Add(file);
+                }
             }
             foreach (string allFile in allFiles)
             {
-                if (!allFiles.Contains(allFile))
-                {
                     FileToDownload.Items.Add(allFile);
                     FileToView.Items.Add(allFile);
-                }
-                
+
             }
         }
 
@@ -107,6 +108,8 @@ namespace RemoteDocumentationGenerator
             bool projMade = server.AddProject(projectName.Text,user);
             if (projMade)
             {
+                server.CreateProjectHTML(projectName.Text, user);
+                server.AddProjectToRoot(projectName.Text, user);
                 userProjects.Add(projectName.Text);
                 MessageBox.Show("Project Created!");
             }
@@ -134,7 +137,8 @@ namespace RemoteDocumentationGenerator
             Nullable<bool> result = openFileDialog.ShowDialog();
             if (result == true)
             {
-                string file = openFileDialog.FileName;
+                string file = openFileDialog.SafeFileName;
+                uploadFilePath = openFileDialog.FileName;
                 uploadFile.Text = file;
             }
                 
@@ -143,7 +147,7 @@ namespace RemoteDocumentationGenerator
         private void UploadFile_Click(object sender, RoutedEventArgs e)
         {
             string destinationPath = server.GetFullDestinationPath(projectOptions.SelectedItem.ToString(),user);
-            bool fileUploaded = server.UploadFile(uploadFile.Text, destinationPath, user, projectOptions.SelectedItem.ToString());
+            bool fileUploaded = server.UploadFile(uploadFilePath, destinationPath, user, projectOptions.SelectedItem.ToString());
             if (fileUploaded)
             {
                 editFiles.Add(uploadFile.Text);

@@ -15,7 +15,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBox Name="editText" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <TextBox Name="editText" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" AcceptsReturn="True"/>
         <Button Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" Width="100" Click="Save_Click">Save</Button>
         <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Width="100" Click="Cancel_Click">Cancel</Button>
     </Grid>

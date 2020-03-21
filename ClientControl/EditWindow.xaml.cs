@@ -30,7 +30,7 @@ namespace RemoteDocumentationGenerator
             InitializeComponent();
             this.Dispatcher.Invoke(() =>
             {
-                editText.Text = System.IO.File.ReadAllText(fileLoc);
+                editText.Text = System.IO.File.ReadAllText(fileLoc.Replace(Environment.NewLine,""));
             });
             _username = username;
             file = fileLoc;
@@ -47,9 +47,8 @@ namespace RemoteDocumentationGenerator
             int lineCount = editText.LineCount;
             for(int line = 0; line < lineCount; line++)
             {
-                lines.Add(editText.GetLineText(line));
+                lines.Add(editText.GetLineText(line).Replace(Environment.NewLine, ""));
             }
-            
             server.SaveFile(file, lines);
             PostLogin postLogin = new PostLogin(_username);
             this.Visibility = Visibility.Hidden;
