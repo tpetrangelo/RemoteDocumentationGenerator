@@ -1,0 +1,52 @@
+
+h1 {
+	text-align: center;
+	border-style: solid;
+	border-color: #000000;
+	font-family: monospace;
+}
+
+h2 {
+	text-align: center;
+	font-family: monospace;
+}
+
+body {
+	font-weight: bold;
+	border-style: solid;
+	border-color: #000000;
+	background-color: bisque;
+	list-style-type: none;
+	border-spacing: 0;
+	border-collapse: collapse;
+	font-family: monospace;
+}
+
+p {
+	text-align: center;
+	font-size: 150%;
+	font-family: monospace;
+}
+
+a {
+	text-decoration: none;
+	list-style-type: none;
+	color: cornflowerblue;
+}
+
+ul li {
+	list-style-type: none;
+	padding-left: 20px;
+
+}
+
+div {
+	padding-left: 20px;
+	white-space: pre;
+}
+
+.inner {
+	white-space: pre;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
