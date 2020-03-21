@@ -364,7 +364,7 @@ namespace ServiceControl
         {
             string destinationPath = "../../../Service/Repos/" + user + "/Root/" + user + ".html";
             StringBuilder sb = new StringBuilder();
-            sb.Append("<!DOCTYPE html><html><head><title>" + user + "</title></head><body><h1 style=\"text-align:center\">" + user + "</h1>");
+            sb.Append("<!DOCTYPE html><html><head><link rel= \"stylesheet\" href=\"..\\..\\..\\..\\css\\Stylesheet.css\" type=\"text/css\"><title>" + user + "</title></head><body><h1 style=\"text-align:center\">" + user + "</h1>");
             sb.Append("</body></html>");
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(destinationPath))
             {
@@ -377,7 +377,7 @@ namespace ServiceControl
             string rootPath = "../../../" + user + "/Root/" + user + ".html";
             string destinationPath = "../../../Service/Repos/" + user + "/" + project + "/html/" + project + ".html";
             StringBuilder sb = new StringBuilder();
-            sb.Append("<!DOCTYPE html><html><head><title>" + project + "</title></head><body><h1 style=\"text-align:center\">" + project + "</h1>");
+            sb.Append("<!DOCTYPE html><html><head><link rel= \"stylesheet\" href=\"..\\..\\..\\..\\..\\css\\Stylesheet.css\" type=\"text/css\"><title>" + project + "</title></head><body><h1 style=\"text-align:center\">" + project + "</h1>");
             sb.Append("<a href =\"" + rootPath + "\">" + user + "</a>");
             sb.Append("</body></html>");
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(destinationPath))
