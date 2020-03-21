@@ -45,15 +45,13 @@ namespace ServiceControl
         string GetFullDestinationPath(string project, string user);
 
         [OperationContract]
-        void DocumentationGenerator(string project);
+        void DocumentationGenerator(string projectPath, string user, string project);
 
         [OperationContract]
         string GetFilePath(string project, string user, string file);
 
         [OperationContract]
         void AddProjectToRoot(string project, string user);
-
-
 
         //Functions for EditWindow
         [OperationContract]

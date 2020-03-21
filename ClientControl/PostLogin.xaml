@@ -46,6 +46,11 @@
             </TabItem>
             <TabItem Width="60" Height="30" Header="Edit File">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="107*"/>
+                        <ColumnDefinition Width="6*"/>
+                        <ColumnDefinition Width="323*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="50"/>
@@ -54,11 +59,11 @@
                         <RowDefinition Height="50"/>
                         <RowDefinition Height="200"/>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a project to edit a file from" FontSize="20"/>
-                    <ComboBox Name="projectEdit" Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2" Margin="118,13"></ComboBox>
-                    <Label Grid.Row="2" HorizontalContentAlignment="Center" Content="Please pick a file to edit" FontSize="20"/>
-                    <ComboBox Name="editFilesCB" Grid.Row="3" HorizontalAlignment="Center" Width="200" Height="25" Grid.ColumnSpan="2" Margin="118,13"></ComboBox>
-                    <Button Grid.Row="4" HorizontalContentAlignment="Center" Width="100" Height="25" Click="EditFiles_Click" >Edit</Button>
+                    <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a project to edit a file from" FontSize="20" Grid.ColumnSpan="3"/>
+                    <ComboBox Name="projectEdit" Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Margin="5,13,118,12" Grid.Column="2"/>
+                    <Label Grid.Row="2" HorizontalContentAlignment="Center" Content="Please pick a file to edit" FontSize="20" Grid.ColumnSpan="3"/>
+                    <ComboBox Name="editFilesCB" Grid.Row="3" HorizontalAlignment="Center" Width="200" Height="25" Margin="5,13,118,12" Grid.Column="2"/>
+                    <Button Grid.Row="4" HorizontalContentAlignment="Center" Width="100" Height="25" Click="EditFiles_Click" Grid.Column="2" Margin="55,12,168,12" >Edit</Button>
 
                 </Grid>
             </TabItem>

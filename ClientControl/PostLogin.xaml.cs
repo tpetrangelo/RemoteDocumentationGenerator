@@ -203,7 +203,7 @@ namespace RemoteDocumentationGenerator
         private void GenerateProject_Click(object sender, RoutedEventArgs e)
         {
             string projectPath = server.GetFullDestinationPath(projectGenerate.SelectedItem.ToString(), user);
-            server.DocumentationGenerator(projectPath);
+            server.DocumentationGenerator(projectPath, user, projectGenerate.SelectedItem.ToString());
         }
 
 

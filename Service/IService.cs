@@ -25,12 +25,18 @@ namespace ServiceControl
         [OperationContract]
         void AddToXML(string username, string password);
 
+        [OperationContract]
+        void CreateRootHTML(string username);
+
+        [OperationContract]
+        void CreateProjectHTML(string project, string username);
+
         //Functions for PostLogin
         [OperationContract]
         bool AddProject(string projectName, string username);
 
         [OperationContract]
-        bool UploadFile(string uploadFile, string project, string username,string projectName);
+        bool UploadFile(string uploadFile, string project, string username, string projectName);
 
         [OperationContract]
         List<string> PopulateProjects(string user);
@@ -39,29 +45,19 @@ namespace ServiceControl
         string GetFullDestinationPath(string project, string user);
 
         [OperationContract]
-        void DocumentationGenerator(string project);
+        void DocumentationGenerator(string projectPath, string user, string project);
 
         [OperationContract]
         string GetFilePath(string project, string user, string file);
 
+        [OperationContract]
+        void AddProjectToRoot(string project, string user);
+
+        
+
         //Functions for EditWindow
         [OperationContract]
         void SaveFile(string file, StringCollection writeBack);
-
-        [OperationContract]
-        void upLoadFile(FileTransferMessage msg);
-
-        [OperationContract]
-        List<string> PopulateFiles();
-
-        [OperationContract]
-        string GetProject(string fileName);
-
-        [OperationContract]
-        string GetUser(string fileName);
-
-        [OperationContract]
-        void DownloadFile(string fileLoc, string user);
 
     }
 

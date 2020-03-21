@@ -27,7 +27,6 @@ namespace RemoteDocumentationGenerator
     public partial class Login : Window
     {
         ServiceControl.Service server;
-        string user;
         ServiceHost service;
 
         public Login()

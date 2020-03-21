@@ -8,8 +8,10 @@ using System.IO;
 using System.Collections.Specialized;
 using System.Text;
 using System.Linq;
-
-//using CodeAnalysis;
+using CodeAnalysis; 
+    
+    
+    //using CodeAnalysis;
 
 
 namespace ServiceControl
@@ -204,8 +206,12 @@ namespace ServiceControl
             return "../../../Service/Repos/" + user + "/" + project + "/source";
         }
 
-        public void DocumentationGenerator(string project)
+        //[DllImport("DocumentationGenerator.dll")]
+        //internal static extern void DocMain(string projectPath, string user, string project);
+
+        public void DocumentationGenerator(string projectPath, string user, string project)
         {
+            FileInitiator.DocMain(projectPath, user, project);
         }
 
         public string GetFilePath(string project,string user, string file)
