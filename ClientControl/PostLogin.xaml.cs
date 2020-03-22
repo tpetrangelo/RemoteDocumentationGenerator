@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.IO;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -150,11 +151,12 @@ namespace RemoteDocumentationGenerator
             bool fileUploaded = server.UploadFile(uploadFilePath, destinationPath, user, projectOptions.SelectedItem.ToString());
             if (fileUploaded)
             {
+                server.AddFileToProject(System.IO.Path.GetFileName(uploadFilePath), projectOptions.SelectedItem.ToString(), user);
                 editFiles.Add(uploadFile.Text);
-                MessageBox.Show("Project Uploaded!");
+                MessageBox.Show("File Uploaded!");
             }
             else
-                MessageBox.Show("Project Could Not Be Uploaded!");
+                MessageBox.Show("File Could Not Be Uploaded!");
             foreach(string file in editFiles)
             {
                 if (!editFilesCB.Items.Contains(file))
@@ -204,6 +206,7 @@ namespace RemoteDocumentationGenerator
         {
             string projectPath = server.GetFullDestinationPath(projectGenerate.SelectedItem.ToString(), user);
             server.DocumentationGenerator(projectPath, user, projectGenerate.SelectedItem.ToString());
+            MessageBox.Show("Project Generated!");
         }
 
 

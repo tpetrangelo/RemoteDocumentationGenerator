@@ -53,11 +53,18 @@ namespace ServiceControl
         [OperationContract]
         void AddProjectToRoot(string project, string user);
 
-        
+        [OperationContract]
+        void AddFileToProject(string file, string project, string user);
+
+        [OperationContract]
+        Stream downLoadFile(string filename, string filePath);
+
 
         //Functions for EditWindow
         [OperationContract]
         void SaveFile(string file, StringCollection writeBack);
+
+
 
     }
 
@@ -66,6 +73,9 @@ namespace ServiceControl
     {
         [MessageHeader]
         public string fileName { get; set; }
+
+        [MessageHeader]
+        public string user { get; set; }
 
         [MessageHeader]
         public string projectPath { get; set; }

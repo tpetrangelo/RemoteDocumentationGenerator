@@ -9,11 +9,7 @@ using System.Collections.Specialized;
 using System.Text;
 using System.Linq;
 using CodeAnalysis; 
-    
-    
-    //using CodeAnalysis;
-
-
+ 
 namespace ServiceControl
 {
     [ServiceBehavior(InstanceContextMode=InstanceContextMode.PerCall)]
@@ -21,7 +17,6 @@ namespace ServiceControl
     {
         int BlockSize = 1024;
         byte[] block;
-
         public Service()
         {
           block = new byte[BlockSize];
@@ -130,6 +125,7 @@ namespace ServiceControl
                 message.fileName = file;
                 message.transferStream = inputStream;
                 message.projectPath = projectPath;
+                message.user = username;
                 this.upLoadFile(message) ;
                 
             }
@@ -206,9 +202,6 @@ namespace ServiceControl
             return "../../../Service/Repos/" + user + "/" + project + "/source";
         }
 
-        //[DllImport("DocumentationGenerator.dll")]
-        //internal static extern void DocMain(string projectPath, string user, string project);
-
         public void DocumentationGenerator(string projectPath, string user, string project)
         {
             FileInitiator.DocMain(projectPath, user, project);
@@ -263,6 +256,7 @@ namespace ServiceControl
             string projectPath = msg.projectPath;
             string filename = msg.fileName;
             string rfilename = Path.Combine(projectPath + "/", filename);
+            string userName = msg.user;
             if (!Directory.Exists(projectPath))
                 Directory.CreateDirectory(projectPath);
             using (var outputStream = new FileStream(rfilename, FileMode.Create))
@@ -356,8 +350,23 @@ namespace ServiceControl
         public void DownloadFile(string fileLoc, string user)
         {
             string file = Path.GetFileName(fileLoc);
-            string destinationPath = "../../../Service/Repos/" + user + "/DownloadedFiles/" + file ;
-            System.IO.File.Copy(fileLoc, destinationPath, true);
+            string destinationPath = "../../../Service/Repos/" + user + "/DownloadedFiles/";
+            Stream strm = this.downLoadFile(file, fileLoc);
+            string rfilename = Path.Combine(destinationPath, file);
+            if (!Directory.Exists(destinationPath))
+                Directory.CreateDirectory(destinationPath);
+            using (var outputStream = new FileStream(rfilename, FileMode.Create))
+            {
+                while (true)
+                {
+                    int bytesRead = strm.Read(block, 0, BlockSize);
+                    if (bytesRead > 0)
+                        outputStream.Write(block, 0, bytesRead);
+                    else
+                        break;
+                }
+            }
+
         }
 
         public void CreateRootHTML(string user)
@@ -378,7 +387,7 @@ namespace ServiceControl
             string destinationPath = "../../../Service/Repos/" + user + "/" + project + "/html/" + project + ".html";
             StringBuilder sb = new StringBuilder();
             sb.Append("<!DOCTYPE html><html><head><link rel= \"stylesheet\" href=\"..\\..\\..\\..\\..\\css\\Stylesheet.css\" type=\"text/css\"><title>" + project + "</title></head><body><h1 style=\"text-align:center\">" + project + "</h1>");
-            sb.Append("<a href =\"" + rootPath + "\">" + user + "</a>");
+            sb.Append("<a href =\"" + rootPath + "\">" + user + "</a></br>");
             sb.Append("</body></html>");
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(destinationPath))
             {
@@ -401,6 +410,36 @@ namespace ServiceControl
             {
                 file.WriteLine(sb.ToString());
             }
+        }
+
+        public void AddFileToProject(string file, string project, string user)
+        {
+            string rootPath = "../../../Service/Repos/" + user + "/" + project + "/html/" + project + ".html";
+            string filePath = "../../../../../Service/Repos/" + user + "/" + project + "/html/" + file.Replace(".cs","") + ".html";
+            string fileContent = File.ReadAllText(rootPath);
+            int bodyIndex = fileContent.IndexOf("</body>");
+            string body = fileContent.Substring(0, bodyIndex);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(body);
+            sb.Append("<a href=\"" + filePath + "\">" + file + "</a></br>");
+            sb.Append("</body></html>");
+            using (System.IO.StreamWriter fileN = new System.IO.StreamWriter(rootPath))
+            {
+                fileN.WriteLine(sb.ToString());
+            }
+        }
+
+        public Stream downLoadFile(string filename, string filePath)
+        {
+           
+            FileStream outStream = null;
+            if (File.Exists(filePath))
+            {
+                outStream = new FileStream(filePath, FileMode.Open);
+            }
+            else
+                throw new Exception("open failed for \"" + filename + "\"");
+            return outStream;
         }
     }
 }
