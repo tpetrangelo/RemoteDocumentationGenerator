@@ -1,4 +1,34 @@
-﻿using System.Xml;
+﻿///////////////////////////////////////////////////////////////////////
+// Service.cs - Implementation of IService.cs                        //
+// ver 1.0                                                           //
+// Language:    C#, 2020, .Net Framework 4.7                         //
+// Platform:    Lenovo Thinkpad X1 Carbon, Win10 Pro                 //
+// Application: Documentation Generator, Project #3, Winter 2020     //
+// Author:      Tom Petrangelo, Syracuse University                  //
+//              thpetran@syr.edu                                     //
+//                                                                   //
+///////////////////////////////////////////////////////////////////////
+/*
+ * Package Operations
+ * -------------------
+ * 
+ * Service is used to implement all of the back-end work for the client.
+ * It will handle searching for users, creating HTML pages, and creating a
+ * service channel for communication
+ * 
+ * Required Files
+ * ---------------
+ * IService.cs
+ * 
+ * Notes
+ * ------
+ * 
+ * Used Dr. Fawcett's FileStreaming solution to help with downloading and uploading files
+ * along with creating a channel
+*/
+
+
+using System.Xml;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using System.Collections.Generic;
@@ -22,6 +52,7 @@ namespace ServiceControl
           block = new byte[BlockSize];
         }
 
+        //Finds usernames in the XML file
         public bool FindUsername(string username)
         {
             XmlDocument xmlDoc = LoadXML();
@@ -34,7 +65,7 @@ namespace ServiceControl
             }
             return false;
         }
-
+        //Matches the user-input password with the current XML file
         public bool MatchPassword(string username, string password)
         {
             XmlDocument xmlDoc = LoadXML();
@@ -54,6 +85,7 @@ namespace ServiceControl
             return false;
         }
 
+        //Loads up the username and password XML file for querying
         private XmlDocument LoadXML()
         {
             XmlDocument xmlDocument = new XmlDocument();
@@ -61,6 +93,7 @@ namespace ServiceControl
             return xmlDocument;
         }
 
+        //Adds a user, password, and root to the XML file
         public void AddToXML(string username, string password)
         {
             XmlDocument xmlDocument = LoadXML();
@@ -84,6 +117,7 @@ namespace ServiceControl
 
         }
 
+        //Adds a project to the XML file under the root id, it also creates the project directory in the Service->Repos folder
         public bool AddProject(string projectName, string username)
         {
             XmlDocument xmlDocument = LoadXML();
@@ -116,6 +150,7 @@ namespace ServiceControl
             return true;
         }
 
+        //Iniitiates the uploading of a file to a directory for the user
         public bool UploadFile(string filePath, string projectPath, string username, string projectName)
         {
             string file = Path.GetFileName(filePath);
@@ -160,6 +195,7 @@ namespace ServiceControl
             return true;
         }
 
+        //Populates all projects for drop-down for use by the user
         public List<string> PopulateProjects(string user)
         {
             XmlDocument xmlDocument = LoadXML();
@@ -185,6 +221,7 @@ namespace ServiceControl
             return userProjects;
         }
 
+        //Creates the communication between client and host
         public static ServiceHost CreateChannel(string url)
         {
             BasicHttpBinding binding = new BasicHttpBinding();
@@ -197,21 +234,26 @@ namespace ServiceControl
             return host;
         }
 
+        //Returns the destination folder path for the project specified
         public string GetFullDestinationPath(string project, string user)
         {
             return "../../../Service/Repos/" + user + "/" + project + "/source";
         }
 
+        //From a DLL, the passed in files are created in HTML format and placed into the project folder
         public void DocumentationGenerator(string projectPath, string user, string project)
         {
             FileInitiator.DocMain(projectPath, user, project);
         }
+
+        //Returns the destination file path for the project specified
 
         public string GetFilePath(string project,string user, string file)
         {
             return "../../../Service/Repos/" + user + "/" + project + "/source/" + file;
         }
 
+        //Populates all possible editable files by the for the user
         public List<string> populateEditFiles(string user)
         {
             XmlDocument xmlDocument = LoadXML();
@@ -244,6 +286,7 @@ namespace ServiceControl
 
         }
 
+        //Saves a file after editing
         public void SaveFile(string file, StringCollection writeBack)
         {
             string[] newFile = new string[writeBack.Count];
@@ -251,6 +294,7 @@ namespace ServiceControl
             System.IO.File.WriteAllLines(file, newFile);
         }
 
+        //Writes to a specified file through FileStream, used to simulate and upload
         public void upLoadFile(FileTransferMessage msg)
         {
             string projectPath = msg.projectPath;
@@ -272,6 +316,7 @@ namespace ServiceControl
             }
         }
 
+        //Returns a list of all files, for use when trying to download or view a file
         public List<string> PopulateFiles()
         {
             XmlDocument xmlDocument = LoadXML();
@@ -293,16 +338,21 @@ namespace ServiceControl
                     }
                 }
             }
-            
+
+            if (allFiles.Count == 0)
+                allFiles.Add("-");
+
             return allFiles;
         }
 
+        //Returns a project based on the file given
         public string GetProject(string fileName)
         {
             XmlDocument xmlDocument = LoadXML();
             XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
             XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
             XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
+
 
             foreach (XmlNode x in xmlNodeList)
             {
@@ -322,6 +372,7 @@ namespace ServiceControl
             return "-";
         }
 
+        //Returns the owner of a file based on the filen given
         public string GetUser(string fileName)
         {
             XmlDocument xmlDocument = LoadXML();
@@ -347,6 +398,7 @@ namespace ServiceControl
             return "-";
         }
 
+        //Initiates a file download based on the location of the file and the user to download to the file to
         public void DownloadFile(string fileLoc, string user)
         {
             string file = Path.GetFileName(fileLoc);
@@ -369,6 +421,7 @@ namespace ServiceControl
 
         }
 
+        //Creates an HTML file of the root user
         public void CreateRootHTML(string user)
         {
             string destinationPath = "../../../Service/Repos/" + user + "/Root/" + user + ".html";
@@ -381,6 +434,7 @@ namespace ServiceControl
             }
         }
 
+        //Creates an HTML file for a new project
         public void CreateProjectHTML(string project, string user)
         {
             string rootPath = "../../../" + user + "/Root/" + user + ".html";
@@ -395,6 +449,7 @@ namespace ServiceControl
             }
         }
 
+        //Adds the HTML link of a project to the users-root page
         public void AddProjectToRoot(string project, string user)
         {
             string destinationPath = "../../../Service/Repos/" + user + "/Root/" + user + ".html";
@@ -412,6 +467,7 @@ namespace ServiceControl
             }
         }
 
+        //Adds an HTML link of a file that has been generated to a project's page
         public void AddFileToProject(string file, string project, string user)
         {
             string rootPath = "../../../Service/Repos/" + user + "/" + project + "/html/" + project + ".html";
@@ -429,6 +485,7 @@ namespace ServiceControl
             }
         }
 
+        //Returns a Stream when trying to download a file
         public Stream downLoadFile(string filename, string filePath)
         {
            

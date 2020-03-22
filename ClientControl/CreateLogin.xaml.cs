@@ -1,4 +1,25 @@
-﻿using System;
+﻿///////////////////////////////////////////////////////////////////////
+// CreateLogin.xaml.cs - logic for creating a login and username     //
+// ver 1.0                                                           //
+// Language:    C#, 2020, .Net Framework 4.7                         //
+// Platform:    Lenovo Thinkpad X1 Carbon, Win10 Pro                 //
+// Application: Documentation Generator, Project #3, Winter 2020     //
+// Author:      Tom Petrangelo, Syracuse University                  //
+//              thpetran@syr.edu                                     //
+//                                                                   //
+///////////////////////////////////////////////////////////////////////
+/*
+ * Package Operations
+ * -------------------
+ * 
+ * CreateLogin is used for front end logic for the WPF window
+ * CreateLogin will handle and button clicks on the CreateLogin window
+*/
+
+
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,11 +58,15 @@ namespace RemoteDocumentationGenerator
             InitializeComponent();
         }
 
+        //Exits the environment on the exiting of a window to avoid unfinished processes
+        //from stayong open after the end of a execution
         private void OnWindowclose(object sender, EventArgs e)
         {
             Environment.Exit(Environment.ExitCode);
         }
 
+        //Creates a user and adds the password and username to the XML file
+        //Also asks the host to create a root HTML page
         private void CreateUser_Click(object sender, RoutedEventArgs e)
         {
             server = new ServiceControl.Service();

@@ -1,4 +1,24 @@
-﻿using System;
+﻿///////////////////////////////////////////////////////////////////////
+// Login.xaml.cs - Logic for the window for logging into the service //
+// ver 1.0                                                           //
+// Language:    C#, 2020, .Net Framework 4.7                         //
+// Platform:    Lenovo Thinkpad X1 Carbon, Win10 Pro                 //
+// Application: Documentation Generator, Project #3, Winter 2020     //
+// Author:      Tom Petrangelo, Syracuse University                  //
+//              thpetran@syr.edu                                     //
+//                                                                   //
+///////////////////////////////////////////////////////////////////////
+/*
+ * Package Operations
+ * -------------------
+ * 
+ * Login is used for front end logic for the WPF window
+ * Login will handle and button clicks on the Login window
+ * 
+*/
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
@@ -28,7 +48,8 @@ namespace RemoteDocumentationGenerator
     {
         ServiceControl.Service server;
         ServiceHost service;
-
+        
+        //On window initialization, creates a communication channel
         public Login()
         {
             InitializeComponent();
@@ -37,11 +58,17 @@ namespace RemoteDocumentationGenerator
             service.Open();
         }
 
+        //Exits the environment on the exiting of a window to avoid unfinished processes
+        //from stayong open after the end of a execution
         private void OnWindowclose(object sender, EventArgs e)
         {
             Environment.Exit(Environment.ExitCode);
         }
 
+        //Checks for the username and password match
+        //Either a user and pw match is found and user can login
+        //the password does not match a user and they have to re-login
+        //username is not found and asked to create a login
         private void Login_Click(object sender, RoutedEventArgs e)
         {
             server = new ServiceControl.Service();

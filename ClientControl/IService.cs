@@ -1,4 +1,24 @@
-﻿using System;
+﻿///////////////////////////////////////////////////////////////////////
+// IService.cs - Interface for Service.cs                            //
+// ver 1.0                                                           //
+// Language:    C#, 2020, .Net Framework 4.7                         //
+// Platform:    Lenovo Thinkpad X1 Carbon, Win10 Pro                 //
+// Application: Documentation Generator, Project #3, Winter 2020     //
+// Author:      Tom Petrangelo, Syracuse University                  //
+//              thpetran@syr.edu                                     //
+//                                                                   //
+///////////////////////////////////////////////////////////////////////
+/*
+ * Package Operations
+ * -------------------
+ * 
+ * IService is used as the interface for Service.cs. This file contains
+ * the service contract and operation contracts for the service.
+ * It also hold the message contract information for 
+ * upload and download
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
