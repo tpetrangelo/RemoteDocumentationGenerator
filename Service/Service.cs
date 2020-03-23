@@ -110,7 +110,7 @@ namespace ServiceControl
             user.AppendChild(pw);
             user.AppendChild(root);
             xmlDocument.DocumentElement.AppendChild(user);
-            xmlDocument.Save("../../UsernamesPasswords.xml");
+            xmlDocument.Save("../../../Service/UsernamesPasswords.xml");
             System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username);
             System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/DownloadedFiles");
             System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/Root");
@@ -141,7 +141,7 @@ namespace ServiceControl
                     XmlNode project = xmlDocument.CreateElement("Project");
                     project.Attributes.SetNamedItem(projectID);
                     rootUser.AppendChild(project);
-                    xmlDocument.Save("../../UsernamesPasswords.xml");
+                    xmlDocument.Save("../../../Service/UsernamesPasswords.xml");
                     System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/" + projectName);
                     System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/" + projectName + "/html");
                     System.IO.Directory.CreateDirectory("../../../Service/Repos/" + username + "/" + projectName + "/source");
@@ -186,7 +186,7 @@ namespace ServiceControl
                             XmlNode fileX = xmlDocument.CreateElement("File");
                             fileX.InnerText = file;
                             proj.AppendChild(fileX);
-                            xmlDocument.Save("../../UsernamesPasswords.xml");
+                            xmlDocument.Save("../../../Service/UsernamesPasswords.xml");
                         }
                     }
                     
