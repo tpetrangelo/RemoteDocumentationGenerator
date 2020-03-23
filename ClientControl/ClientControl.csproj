@@ -130,9 +130,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="UsernamesPasswords.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Service\Service.csproj">
       <Project>{3446198d-ec6b-43bb-8e75-d8bf6818607a}</Project>
       <Name>Service</Name>

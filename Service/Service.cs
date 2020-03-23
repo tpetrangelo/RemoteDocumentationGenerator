@@ -89,7 +89,7 @@ namespace ServiceControl
         private XmlDocument LoadXML()
         {
             XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.Load("../../UsernamesPasswords.xml");
+            xmlDocument.Load("../../../Service/UsernamesPasswords.xml");
             return xmlDocument;
         }
 
