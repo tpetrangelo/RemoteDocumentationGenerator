@@ -253,10 +253,9 @@ namespace ServiceControl
         }
 
         //Populates all possible editable files by the for the user
-        public List<string> PopulateEditFiles(string user)
+        public List<string> PopulateEditFiles(string user, string project)
         {
             XmlDocument xmlDocument = LoadXML();
-           
             XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
             List<string> editFiles = new List<string>();
 
@@ -269,9 +268,11 @@ namespace ServiceControl
             {
                 if (file.ParentNode.ParentNode.Attributes["id"].Value.ToString() == user)
                 {
-                    editFiles.Add(file.InnerText.ToString());
+                    if(file.ParentNode.Attributes["id"].Value.ToString() == project)
+                    {
+                        editFiles.Add(file.InnerText.ToString());
+                    }
                 }
-
             }
 
             if (editFiles.Count == 0)

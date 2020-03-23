@@ -60,7 +60,7 @@
                         <RowDefinition Height="200"/>
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0" HorizontalContentAlignment="Center" Content="Please pick a project to edit a file from" FontSize="20" Grid.ColumnSpan="3"/>
-                    <ComboBox Name="projectEdit" Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Margin="5,13,118,12" Grid.Column="2"/>
+                    <ComboBox Name="projectEdit" Grid.Row="1" HorizontalAlignment="Center" Width="200" Height="25" Margin="5,13,118,12" Grid.Column="2" SelectionChanged="projectEdit_SelectionChanged"/>
                     <Label Grid.Row="2" HorizontalContentAlignment="Center" Content="Please pick a file to edit" FontSize="20" Grid.ColumnSpan="3"/>
                     <ComboBox Name="editFilesCB" Grid.Row="3" HorizontalAlignment="Center" Width="200" Height="25" Margin="5,13,118,12" Grid.Column="2"/>
                     <Button Grid.Row="4" HorizontalContentAlignment="Center" Width="100" Height="25" Click="EditFiles_Click" Grid.Column="2" Margin="55,12,168,12" >Edit</Button>

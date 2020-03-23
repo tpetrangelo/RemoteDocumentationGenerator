@@ -59,8 +59,8 @@ namespace RemoteDocumentationGenerator
             user = userName;
             _serverHost = serviceHost;
             InitializeComponent();
+            projectEdit.SelectionChanged += new SelectionChangedEventHandler(projectEdit_SelectionChanged);
             userProjects.Add(userName, server.PopulateProjects(userName));
-            editFiles.Add(userName, server.PopulateEditFiles(userName));
             allFiles = server.PopulateFiles();
             foreach (string project in userProjects[userName])
             {   
@@ -70,13 +70,7 @@ namespace RemoteDocumentationGenerator
                     projectEdit.Items.Add(project);
                 }
             }
-            foreach (string file in editFiles[userName])
-            {
-                if (!editFilesCB.Items.Contains(file))
-                {
-                    editFilesCB.Items.Add(file);
-                }
-            }
+
             foreach(string allFile in allFiles)
             {
                 if(!(FileToView.Items.Contains(allFile) && FileToDownload.Items.Contains(allFile)))
@@ -92,8 +86,8 @@ namespace RemoteDocumentationGenerator
         {
             user = userName;
             InitializeComponent();
+            projectEdit.SelectionChanged += new SelectionChangedEventHandler(projectEdit_SelectionChanged);
             userProjects.Add(userName, server.PopulateProjects(userName));
-            editFiles.Add(userName, server.PopulateEditFiles(userName));
             allFiles = server.PopulateFiles();
 
             foreach (string project in userProjects[userName])
@@ -103,13 +97,6 @@ namespace RemoteDocumentationGenerator
                     projectOptions.Items.Add(project);
                     projectGenerate.Items.Add(project);
                     projectEdit.Items.Add(project);
-                }
-            }
-            foreach (string file in editFiles[userName])
-            {
-                if (!editFilesCB.Items.Contains(file))
-                {
-                    editFilesCB.Items.Add(file);
                 }
             }
             foreach (string allFile in allFiles)
@@ -252,6 +239,22 @@ namespace RemoteDocumentationGenerator
             MessageBox.Show("Project Generated!");
         }
 
-
+        private void projectEdit_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string project = projectEdit.SelectedItem.ToString();
+            editFiles.Clear();
+            editFiles.Add(user, server.PopulateEditFiles(user, project));
+            foreach(KeyValuePair<string,List<string>> kvp in editFiles)
+            {
+               foreach(string file in kvp.Value)
+                {
+                    if (!editFilesCB.Items.Contains(file))
+                    {
+                        editFilesCB.Items.Add(file);
+                    }
+                }
+                
+            }
+        }
     }
 }
