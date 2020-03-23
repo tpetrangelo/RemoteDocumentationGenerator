@@ -175,6 +175,11 @@ namespace RemoteDocumentationGenerator
             if (fileUploaded)
             {
                 server.AddFileToProject(System.IO.Path.GetFileName(uploadFilePath), projectOptions.SelectedItem.ToString(), user);
+                if (!editFiles.ContainsKey(user))
+                {
+                    List<string> edit = new List<string>();
+                    editFiles.Add(user, edit);
+                }
                 editFiles[user].Add(uploadFile.Text);
                 allFiles.Add(uploadFile.Text);
                 MessageBox.Show("File Uploaded!");
