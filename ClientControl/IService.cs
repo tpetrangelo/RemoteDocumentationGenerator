@@ -18,6 +18,7 @@
  * upload and download
 */
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace ServiceControl
 
         [OperationContract]
         void CreateProjectHTML(string project, string username);
-        
+
         //Functions for PostLogin
         [OperationContract]
         bool AddProject(string projectName, string username);
@@ -60,6 +61,9 @@ namespace ServiceControl
 
         [OperationContract]
         List<string> PopulateProjects(string user);
+
+        [OperationContract]
+        List<string> PopulateEditFiles(string user);
 
         [OperationContract]
         string GetFullDestinationPath(string project, string user);
@@ -73,11 +77,19 @@ namespace ServiceControl
         [OperationContract]
         void AddProjectToRoot(string project, string user);
 
+        [OperationContract]
+        void AddFileToProject(string file, string project, string user);
+
+        [OperationContract]
+        Stream downLoadFile(string filename, string filePath);
+
+
         //Functions for EditWindow
         [OperationContract]
         void SaveFile(string file, StringCollection writeBack);
 
-        
+
+
     }
 
     [MessageContract]
@@ -86,7 +98,15 @@ namespace ServiceControl
         [MessageHeader]
         public string fileName { get; set; }
 
+        [MessageHeader]
+        public string user { get; set; }
+
+        [MessageHeader]
+        public string projectPath { get; set; }
+
         [MessageBodyMember]
         public Stream transferStream { get; set; }
+
+
     }
 }

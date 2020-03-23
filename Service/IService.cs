@@ -63,6 +63,9 @@ namespace ServiceControl
         List<string> PopulateProjects(string user);
 
         [OperationContract]
+        List<string> PopulateEditFiles(string user);
+
+        [OperationContract]
         string GetFullDestinationPath(string project, string user);
 
         [OperationContract]

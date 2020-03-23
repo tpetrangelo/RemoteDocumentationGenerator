@@ -199,25 +199,24 @@ namespace ServiceControl
         public List<string> PopulateProjects(string user)
         {
             XmlDocument xmlDocument = LoadXML();
-            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
             XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
             List<string> userProjects = new List<string>();
+
+            userProjects.Clear();
 
             if (userProjects.Count != 0 && userProjects[0] == "-")
                 userProjects.RemoveAt(0);
 
-            foreach (XmlNode x in xmlNodeList)
+            foreach(XmlNode proj in xmlProjectList)
             {
-                if (x.InnerText == user)
+                if(proj.ParentNode.Attributes["id"].Value.ToString() == user)
                 {
-                    foreach(XmlNode proj in xmlProjectList)
-                    {
-                        userProjects.Add(proj.Attributes["id"].Value.ToString());
-                    }
-                    return userProjects;
+                    userProjects.Add(proj.Attributes["id"].Value.ToString());
                 }
+                        
             }
-            userProjects.Add("-");
+            if(userProjects.Count == 0)
+                userProjects.Add("-");
             return userProjects;
         }
 
@@ -254,36 +253,30 @@ namespace ServiceControl
         }
 
         //Populates all possible editable files by the for the user
-        public List<string> populateEditFiles(string user)
+        public List<string> PopulateEditFiles(string user)
         {
             XmlDocument xmlDocument = LoadXML();
-            XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Users/User/Username");
-            XmlNodeList xmlProjectList = xmlDocument.SelectNodes("/Users/User/Root/Project");
+           
             XmlNodeList xmlFileList = xmlDocument.SelectNodes("/Users/User/Root/Project/File");
             List<string> editFiles = new List<string>();
+
+            editFiles.Clear();
 
             if (editFiles.Count != 0 && editFiles[0].ToString() == "-")
                 editFiles.RemoveAt(0);
 
-            foreach (XmlNode x in xmlNodeList)
+            foreach (XmlNode file in xmlFileList)
             {
-               
-                if (x.InnerText == user)
+                if (file.ParentNode.ParentNode.Attributes["id"].Value.ToString() == user)
                 {
-                    foreach (XmlNode proj in xmlProjectList)
-                    {
-                        foreach(XmlNode file in xmlFileList)
-                        {
-                            editFiles.Add(file.InnerText);
-                        }
-                    }
+                    editFiles.Add(file.InnerText.ToString());
                 }
+
             }
-            if(editFiles.Count == 0)
+
+            if (editFiles.Count == 0)
                 editFiles.Add("-");
-
             return editFiles;
-
         }
 
         //Saves a file after editing

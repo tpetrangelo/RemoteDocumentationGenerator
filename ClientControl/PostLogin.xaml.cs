@@ -48,8 +48,8 @@ namespace RemoteDocumentationGenerator
         string user;
         static string uploadFilePath;
         static ServiceHost _serverHost;
-        List<string> userProjects = new List<string>();
-        List<string> editFiles = new List<string>();
+        Dictionary<string, List<string>> userProjects = new Dictionary<string, List<string>>();
+        Dictionary<string, List<string>> editFiles = new Dictionary<string, List<string>>();
         List<string> allFiles = new List<string>();
 
         //populates all possible drop down boxes with valid projects or files
@@ -59,17 +59,18 @@ namespace RemoteDocumentationGenerator
             user = userName;
             _serverHost = serviceHost;
             InitializeComponent();
-            userProjects = server.PopulateProjects(userName);
-            editFiles = server.populateEditFiles(userName);
+            userProjects.Add(userName, server.PopulateProjects(userName));
+            editFiles.Add(userName, server.PopulateEditFiles(userName));
             allFiles = server.PopulateFiles();
-            foreach (string project in userProjects)
-            {            
-                projectOptions.Items.Add(project);
-                projectGenerate.Items.Add(project);
-                projectEdit.Items.Add(project);
-
+            foreach (string project in userProjects[userName])
+            {   
+                if(!(projectOptions.Items.Contains(project) && projectGenerate.Items.Contains(project) && projectEdit.Items.Contains(project))){
+                    projectOptions.Items.Add(project);
+                    projectGenerate.Items.Add(project);
+                    projectEdit.Items.Add(project);
+                }
             }
-            foreach (string file in editFiles)
+            foreach (string file in editFiles[userName])
             {
                 if (!editFilesCB.Items.Contains(file))
                 {
@@ -78,8 +79,11 @@ namespace RemoteDocumentationGenerator
             }
             foreach(string allFile in allFiles)
             {
+                if(!(FileToView.Items.Contains(allFile) && FileToDownload.Items.Contains(allFile)))
+                {
                     FileToDownload.Items.Add(allFile);
                     FileToView.Items.Add(allFile);
+                }
             }
         }
 
@@ -88,18 +92,20 @@ namespace RemoteDocumentationGenerator
         {
             user = userName;
             InitializeComponent();
-            userProjects = server.PopulateProjects(userName);
-            editFiles = server.populateEditFiles(userName);
+            userProjects.Add(userName, server.PopulateProjects(userName));
+            editFiles.Add(userName, server.PopulateEditFiles(userName));
             allFiles = server.PopulateFiles();
 
-            foreach (string project in userProjects)
+            foreach (string project in userProjects[userName])
             {
-                projectOptions.Items.Add(project);
-                projectGenerate.Items.Add(project);
-                projectEdit.Items.Add(project);
-
+                if (!(projectOptions.Items.Contains(project) && projectGenerate.Items.Contains(project) && projectEdit.Items.Contains(project)))
+                {
+                    projectOptions.Items.Add(project);
+                    projectGenerate.Items.Add(project);
+                    projectEdit.Items.Add(project);
+                }
             }
-            foreach (string file in editFiles)
+            foreach (string file in editFiles[userName])
             {
                 if (!editFilesCB.Items.Contains(file))
                 {
@@ -108,9 +114,11 @@ namespace RemoteDocumentationGenerator
             }
             foreach (string allFile in allFiles)
             {
+                if (!(FileToView.Items.Contains(allFile) && FileToDownload.Items.Contains(allFile)))
+                {
                     FileToDownload.Items.Add(allFile);
                     FileToView.Items.Add(allFile);
-
+                }
             }
         }
 
@@ -137,16 +145,16 @@ namespace RemoteDocumentationGenerator
             {
                 server.CreateProjectHTML(projectName.Text, user);
                 server.AddProjectToRoot(projectName.Text, user);
-                userProjects.Add(projectName.Text);
+                userProjects[user].Add(projectName.Text);
                 MessageBox.Show("Project Created!");
             }
             else
             {
                 MessageBox.Show("Project Could Not Be Created!");
             }
-            foreach (string project in userProjects)
+            foreach (string project in userProjects[user])
             {
-                if (!projectOptions.Items.Contains(project))
+                if (!(projectOptions.Items.Contains(project) && projectGenerate.Items.Contains(project) && projectEdit.Items.Contains(project)))
                 {
                     projectOptions.Items.Add(project);
                     projectGenerate.Items.Add(project);
@@ -180,12 +188,14 @@ namespace RemoteDocumentationGenerator
             if (fileUploaded)
             {
                 server.AddFileToProject(System.IO.Path.GetFileName(uploadFilePath), projectOptions.SelectedItem.ToString(), user);
-                editFiles.Add(uploadFile.Text);
+                editFiles[user].Add(uploadFile.Text);
+                allFiles.Add(uploadFile.Text);
                 MessageBox.Show("File Uploaded!");
             }
             else
                 MessageBox.Show("File Could Not Be Uploaded!");
-            foreach(string file in editFiles)
+
+            foreach (string file in editFiles[user])
             {
                 if (!editFilesCB.Items.Contains(file))
                 {
@@ -193,12 +203,12 @@ namespace RemoteDocumentationGenerator
                 }
             }
 
-            foreach(string allFile in allFiles)
+            foreach (string allFile in allFiles)
             {
-                if (!FileToView.Items.Contains(allFile))
+                if (!(FileToView.Items.Contains(allFile) && FileToDownload.Items.Contains(allFile)))
                 {
-                    FileToView.Items.Add(allFile);
                     FileToDownload.Items.Add(allFile);
+                    FileToView.Items.Add(allFile);
                 }
             }
         }
@@ -217,7 +227,8 @@ namespace RemoteDocumentationGenerator
         private void ViewFiles_Click(object sender, RoutedEventArgs e)
         {
             string project = server.GetProject(FileToView.SelectedItem.ToString());
-            string fileLoc = server.GetFilePath(project, user, FileToView.SelectedItem.ToString());
+            string fileUser = server.GetUser(FileToView.SelectedItem.ToString());
+            string fileLoc = server.GetFilePath(project, fileUser, FileToView.SelectedItem.ToString());
             ViewWindow viewWindow = new ViewWindow(fileLoc, user);
             this.Visibility = Visibility.Hidden;
             viewWindow.Show();
