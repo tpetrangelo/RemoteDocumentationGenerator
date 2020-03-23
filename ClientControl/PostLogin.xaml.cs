@@ -239,6 +239,7 @@ namespace RemoteDocumentationGenerator
             MessageBox.Show("Project Generated!");
         }
 
+        //When a project is selected, the below function picks all files in that project to edit
         private void projectEdit_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string project = projectEdit.SelectedItem.ToString();
